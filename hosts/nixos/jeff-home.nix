@@ -47,8 +47,8 @@ in {
     networking.firewall.allowedTCPPorts = [ ];
     networking.firewall.allowedUDPPorts = [ ];
 
-    services.deluge.enable = true;
-    services.deluge.web.enable = true;
+    services.deluge.enable = false;
+    services.deluge.web.enable = false;
 
     services.plex.enable = true;
     services.plex.dataDir = "/mnt/huge/jeff-home/var/lib/plex";
@@ -65,10 +65,9 @@ in {
           "netbios name" = "JEFF-HOME";
           security = "user";
           # "use sendfile" = "yes";
-          "max protocol" = "smb2";
+          # "max protocol" = "smb2";
           # note: localhost is the ipv6 localhost ::1
-          "hosts allow" =
-            "192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46 192.168.1.161";
+          # "hosts allow" = "127.0.0.1 localhost 192.168. 192.168.1.161 192.168.1.168";
           # "hosts deny" = "0.0.0.0/0";
           "guest account" = "nobody";
           "map to guest" = "bad user";
