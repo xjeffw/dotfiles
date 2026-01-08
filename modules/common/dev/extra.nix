@@ -13,6 +13,7 @@ in {
 
     home-manager.users.${user.name} = {
       home.packages = with pkgs; [
+        bash-language-server
         cmake-language-server
         gnuplot
         go

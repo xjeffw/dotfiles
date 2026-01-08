@@ -32,6 +32,12 @@ vim.opt.number = false            -- disable line numbers
 vim.opt.clipboard = "unnamedplus" -- use system clipboard for all operations
 vim.opt.termguicolors = true
 
+vim.filetype.add({
+  extension = {
+    rex = "clojure",
+  },
+})
+
 vim.o.guifont = "JetBrainsMono Nerd Font:h12"
 
 require("config.globals")         -- load global utility defs

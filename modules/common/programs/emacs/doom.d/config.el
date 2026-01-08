@@ -101,7 +101,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
        doom-one-brighter-modeline nil
        doom-themes-padded-modeline nil
        doom-gruvbox-dark-variant "medium"
-       gcmh-high-cons-threshold (* 1024 1024 2000))
+       gcmh-high-cons-threshold (* 1024 1024 1000))
 
 (require 'catppuccin-theme)
 
@@ -110,6 +110,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (setf (alist-get 'right-fringe default-frame-alist) 8)
 (setf (alist-get 'left-fringe default-frame-alist) 8)
 (setf (alist-get 'internal-border-width default-frame-alist) 0)
+;; (set-frame-parameter nil 'internal-border-width 0)
 
 (menu-bar-mode -1)
 (global-auto-revert-mode t)
