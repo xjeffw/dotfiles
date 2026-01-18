@@ -119,6 +119,7 @@ in {
         inetutils
         iotop
         kmon
+        libsecret
         libtool
         lsof
         nix-index
