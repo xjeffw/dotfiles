@@ -19,6 +19,7 @@ in {
         go
         html-tidy
         lessc
+        mdformat
         mono
         pandoc
         sbcl

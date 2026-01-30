@@ -22,11 +22,17 @@ in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
   config = mkIf cfg.enable {
-    environment.systemPackages = if cfg.enable then [
-      (optimize config rubyCustom)
-      pkgs.ruby_3_3.devdoc
-    ] else
-      [ pkgs.ruby ];
+    environment.systemPackages = if cfg.enable then
+      with pkgs; [
+        (optimize config rubyCustom)
+        ruby_3_3.devdoc
+        rubocop
+        rufo
+        ruby-lsp
+        solargraph
+      ]
+    else
+      with pkgs; [ ruby ];
     home-manager.users.${user.name} = { };
   };
 }
