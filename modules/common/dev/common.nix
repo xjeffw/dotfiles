@@ -30,7 +30,7 @@ in {
           gnumake
           nil
           nix-init
-          nixfmt-classic
+          nixfmt
           nodePackages.stylelint
           nodePackages.prettier
           nodejs_latest

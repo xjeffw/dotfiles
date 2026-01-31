@@ -13,7 +13,7 @@ in {
         userName = "${config.user.full-name}";
         userEmail = "${config.user.email}";
         lfs.enable = true;
-        extraConfig = {
+        settings = {
           push.default = "current";
           pull.rebase = true;
           init.defaultBranch = "main";

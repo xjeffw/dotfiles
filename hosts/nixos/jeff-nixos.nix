@@ -1,8 +1,16 @@
-{ config, options, pkgs, lib, inputs, modulesPath, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  inputs,
+  modulesPath,
+  ...
+}:
 with lib;
 let
-  getMesaPkgs = pkgsBase:
-    with pkgsBase; [
+  getMesaPkgs =
+    pkgsBase: with pkgsBase; [
       libvdpau-va-gl
       libva
       libvdpau
@@ -10,9 +18,9 @@ let
     ];
   mesaPkgs = getMesaPkgs pkgs ++ (with pkgs; [ rocmPackages.clr.icd ]);
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
-in {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ]
-    ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay mesa-git ]);
+in
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
     host.optimize = true;
@@ -31,7 +39,7 @@ in {
       desktop.hyprland.flake = false;
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       programs.mpv.extraConf = ''
-        vo=gpu-next
+        vo=gpu
         gpu-context=waylandvk
         gpu-api=vulkan
       '';
@@ -58,10 +66,12 @@ in {
       recommendedOptimisation = true;
       recommendedGzipSettings = true;
       virtualHosts."localhost" = {
-        listen = [{
-          addr = "localhost";
-          port = 80;
-        }];
+        listen = [
+          {
+            addr = "localhost";
+            port = 80;
+          }
+        ];
         locations."/" = {
           proxyPass = "http://localhost:8199";
           proxyWebsockets = true;
@@ -78,7 +88,9 @@ in {
       # waynergy_git
     ];
 
-    environment.etc = { "machines/win10.xml".source = ./libvirt/win10.xml; };
+    environment.etc = {
+      "machines/win10.xml".source = ./libvirt/win10.xml;
+    };
 
     ## create virtual proxy devices for usb devices passed to qemu
     ## - this is needed so that qemu "-object input-linux,evdev=..." won't break
@@ -87,12 +99,9 @@ in {
       enable = true;
       devices = {
         persist-keyboard0 = "usb-Topre_Corporation_HHKB_Professional-event-kbd";
-        persist-mouse0 =
-          "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-mouse";
-        persist-mouse1 =
-          "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
-        persist-mouse2 =
-          "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
+        persist-mouse0 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-mouse";
+        persist-mouse1 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
+        persist-mouse2 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
         persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
       };
     };
@@ -145,27 +154,42 @@ in {
       };
       "/nix" = {
         device = "/mnt/arch/nix";
-        depends = [ "/" "/mnt/arch" ];
+        depends = [
+          "/"
+          "/mnt/arch"
+        ];
         neededForBoot = true;
         fsType = "none";
         options = [ "bind" ];
       };
     };
 
-    swapDevices = [{
-      device = "/swapfile";
-      size = 32 * 1024; # 32GB
-    }];
+    swapDevices = [
+      {
+        device = "/swapfile";
+        size = 32 * 1024; # 32GB
+      }
+    ];
 
     # boot.kernelPackages = pkgs.linuxPackages;
-    boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_zen;
+    # boot.kernelPackages = pkgs.linuxPackages_latest;
     # boot.kernelPackages = pkgs.linuxPackages_6_6;
     # boot.kernelPackages = pkgs.linuxPackages_lqx;
     # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
-    boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
-    boot.initrd.availableKernelModules =
-      [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+    boot.kernelModules = [
+      "kvm-amd"
+      "i2c_dev"
+    ];
+    boot.initrd.availableKernelModules = [
+      "nvme"
+      "xhci_pci"
+      "ahci"
+      "usbhid"
+      "usb_storage"
+      "sd_mod"
+    ];
     boot.initrd.kernelModules = [
       "vfio"
       "vfio_iommu_type1"
@@ -175,7 +199,10 @@ in {
       "iommufd"
       "amdgpu"
     ];
-    boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
+    boot.blacklistedKernelModules = [
+      "nouveau"
+      "nvidia"
+    ];
     boot.kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
@@ -202,12 +229,8 @@ in {
       extraPackages32 = mesaPkgs32;
     };
 
-    hardware.amdgpu = { opencl.enable = true; };
-
-    chaotic.mesa-git = {
-      enable = true;
-      extraPackages = mesaPkgs;
-      extraPackages32 = mesaPkgs32;
+    hardware.amdgpu = {
+      opencl.enable = true;
     };
 
     nix.settings.max-jobs = 3;

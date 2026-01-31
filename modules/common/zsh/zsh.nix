@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   inherit (lib.my) mkBoolOpt wrapOptimize;
   inherit (config) host user;
-  inherit (config.host) darwin;
+  inherit (config.host) darwin config-dir;
+  pwd = "${config-dir}/modules/common/zsh";
 
   makeUserConfig = extra: {
     enable = true;
@@ -116,8 +122,7 @@ let
       gho = "gh org list";
       ### mpv
       mpvf = "mpv --input-ipc-server=";
-      mpv-hlg =
-        "mpv --icc-profile= --icc-profile-auto=no --target-trc=hlg --target-prim=bt.2020 --target-peak=1000 --hdr-compute-peak=no";
+      mpv-hlg = "mpv --icc-profile= --icc-profile-auto=no --target-trc=hlg --target-prim=bt.2020 --target-peak=1000 --hdr-compute-peak=no";
       # mpv2 = "mpv --icc-profile=~/.local/share/icc/p2715q.icc";
       ### misc
       sr-psql = "psql -h localhost -U postgres sysrev";
@@ -130,7 +135,8 @@ let
       H = "history -50000 | grep -i";
       n = "cd ${host.config-dir}";
       zsh-profile = "ZPROFILE=1 zsh -i -c exit";
-    } // (extra.shellAliases or { });
+    }
+    // (extra.shellAliases or { });
 
     shellGlobalAliases = {
       _g = "| grep";
@@ -151,13 +157,13 @@ let
       FS1 = "--fs --fs-screen=1";
       FS2 = "--fs --fs-screen=2";
       F24 = "--display-fps=24";
-      HLG =
-        "--target-trc=hlg --target-prim=bt.2020 --hdr-compute-peak=yes --tone-mapping=hable";
+      HLG = "--target-trc=hlg --target-prim=bt.2020 --hdr-compute-peak=yes --tone-mapping=hable";
       SVP = "--input-ipc-server=/tmp/mpvsocket";
       NOSVP = "--input-ipc-server=";
       ICC = "--icc-profile-auto=yes";
       NOICC = "--icc-profile-auto=no";
-    } // (extra.shellGlobalAliases or { });
+    }
+    // (extra.shellGlobalAliases or { });
 
     initExtraFirst = ''
       export USING_P10K=1
@@ -268,36 +274,45 @@ let
   };
 
   cfg = config.modules.zsh;
-in {
+in
+{
   options.modules.zsh.enable = mkBoolOpt true;
 
   config = mkIf cfg.enable {
     programs.zsh.enable = true;
 
-    environment.shells = with pkgs; [ zsh bash ];
+    environment.shells = with pkgs; [
+      zsh
+      bash
+    ];
 
     # programs.command-not-found.enable = !darwin;
 
     nixpkgs.overlays = [ (wrapOptimize config "zsh") ];
 
-    home-manager.users.${user.name} = {
-      programs.zsh = (if darwin then userDarwinConfig else userLinuxConfig);
-      programs.zoxide.enable = true;
-      programs.fzf.enable = true;
+    home-manager.users.${user.name} =
+      { config, pkgs, ... }:
+      let
+        link = config.lib.file.mkOutOfStoreSymlink;
+      in
+      {
+        programs.zsh = (if darwin then userDarwinConfig else userLinuxConfig);
+        programs.zoxide.enable = true;
+        programs.fzf.enable = true;
 
-      home.file.".zsh/prompts".source = ./prompts;
-      home.file.".zsh/completions/_lsd".source = ./_lsd;
-      home.file.".p10k.zsh".source = ./p10k.zsh;
+        home.file.".zsh/prompts".source = ./prompts;
+        home.file.".zsh/completions/_lsd".source = ./_lsd;
+        home.file.".p10k.zsh".source = link "${pwd}/p10k.zsh";
 
-      home.packages = with pkgs; [
-        nix-zsh-completions
-        zsh-better-npm-completion
+        home.packages = with pkgs; [
+          nix-zsh-completions
+          zsh-better-npm-completion
 
-        zsh-powerlevel10k
-        starship
-        powerline-go
-        agkozak-zsh-prompt
-      ];
-    };
+          zsh-powerlevel10k
+          starship
+          powerline-go
+          agkozak-zsh-prompt
+        ];
+      };
   };
 }

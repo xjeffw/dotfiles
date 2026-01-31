@@ -3,7 +3,8 @@
 
   inputs = {
     ### System
-    nixpkgs.url = "github:NixOS/nixpkgs/c5ae371f1a6a7fd27823";
+    # nixpkgs.url = "github:NixOS/nixpkgs/c5ae371f1a6a7fd27823";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-2311.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-latest.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -15,7 +16,6 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     ### Nix helpers
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";

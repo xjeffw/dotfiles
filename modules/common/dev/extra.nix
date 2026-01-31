@@ -23,7 +23,7 @@ in {
         mono
         pandoc
         sbcl
-        roswell
+        #_roswell
         pueue
       ];
     };
