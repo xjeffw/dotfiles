@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   inherit (lib.my) mkBoolOpt optimize;
@@ -6,18 +11,30 @@ let
   inherit (user) home;
   inherit (host) config-dir darwin;
   pwd = "${config-dir}/modules/common";
-in {
-  options = { modules.guix.enable = mkBoolOpt false; };
+in
+{
+  options = {
+    modules.guix.enable = mkBoolOpt false;
+  };
 
   config = {
-    nixpkgs.config.permittedInsecurePackages =
-      [ "nodejs-10.24.1" "nodejs-12.22.12" "python-2.7.18.6" ];
+    nixpkgs.config.permittedInsecurePackages = [
+      "nodejs-10.24.1"
+      "nodejs-12.22.12"
+      "python-2.7.18.6"
+    ];
 
-    environment.systemPackages = with pkgs; [ cachix home-manager ];
+    environment.systemPackages = with pkgs; [
+      cachix
+      home-manager
+    ];
 
-    home-manager.users.${user.name} = { config, pkgs, ... }:
-      let link = config.lib.file.mkOutOfStoreSymlink;
-      in {
+    home-manager.users.${user.name} =
+      { config, pkgs, ... }:
+      let
+        link = config.lib.file.mkOutOfStoreSymlink;
+      in
+      {
         home.sessionPath = [
           "${home}/bin.local"
           "${home}/bin"
@@ -37,7 +54,8 @@ in {
         programs.imv.enable = !darwin;
         # programs.pqiv.enable = !darwin;
 
-        home.packages = with pkgs;
+        home.packages =
+          with pkgs;
           let
             core = [
               (optimize config fd)
@@ -72,17 +90,63 @@ in {
               tree
               yt-dlp
             ];
-            compression = [ p7zip unrar unzip xz zip ];
-            nix-tools = [ comma rippkgs ];
-            fetch = [ fastfetch inxi neofetch screenfetch ];
-            media = [ greg mediainfo ];
+            compression = [
+              p7zip
+              unrar
+              unzip
+              xz
+              zip
+            ];
+            nix-tools = [
+              comma
+              rippkgs
+            ];
+            fetch = [
+              fastfetch
+              inxi
+              neofetch
+              screenfetch
+            ];
+            media = [
+              greg
+              mediainfo
+            ];
             games = [ nethack ];
-            ai = [ aichat aider-chat mods tgpt ];
-            matrix = [ cmatrix tmatrix unimatrix ];
-            extra = [ asciinema asciinema-agg termtosvg timg ];
+            ai = [
+              aichat
+              aider-chat
+              mods
+              tgpt
+            ];
+            matrix = [
+              cmatrix
+              tmatrix
+              unimatrix
+            ];
+            extra = [
+              asciinema
+              asciinema-agg
+              termtosvg
+              timg
+            ];
+            sounds = [
+              sound-theme-freedesktop
+              pantheon.elementary-sound-theme
+            ];
             guix-pkgs = optionals (modules.guix.enable) [ guix ];
-          in core ++ tools ++ compression ++ nix-tools ++ fetch ++ media
-          ++ games ++ ai ++ matrix ++ extra ++ guix-pkgs;
+          in
+          core
+          ++ tools
+          ++ compression
+          ++ nix-tools
+          ++ fetch
+          ++ media
+          ++ games
+          ++ ai
+          ++ matrix
+          ++ extra
+          ++ sounds
+          ++ guix-pkgs;
       };
   };
 }

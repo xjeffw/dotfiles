@@ -52,8 +52,13 @@ in {
             final.pkgs-stable.wrapMpv mpv-unwrapped mpvOpts;
           withVS = mpv-unwrapped:
             mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
+          unwrapped = withVS final.mpv-unwrapped;
         in {
-          mpv = pipe final.mpv-unwrapped [ withVS wrapMpv (optimize config) ];
+          mpv = pipe unwrapped [ wrapMpv (optimize config) ];
+          mpv-unwrapped-bin = final.runCommand "mpv-unwrapped" { } ''
+            mkdir -p $out/bin
+            ln -s ${unwrapped}/bin/mpv $out/bin/mpv-unwrapped
+          '';
           vapoursynth = final.pkgs-stable.vapoursynth;
           vapoursynth-mvtools = final.pkgs-stable.vapoursynth-mvtools;
         })
@@ -84,7 +89,7 @@ in {
         inputExtra = inputExtraVapoursynth + inputExtraMpvRate;
       in {
         home.packages = with pkgs;
-          [ mpv ffmpeg ] # \
+          [ mpv mpv-unwrapped-bin ffmpeg ] # \
           ++ optionals (!darwin) [ mpvc celluloid ]
           ++ optionals cfg.vapoursynth [ vapoursynth vapoursynth-mvtools ];
 
