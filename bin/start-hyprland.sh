@@ -10,5 +10,5 @@ done
 
 set +e
 # systemd-cat --identifier=hyprland Hyprland
-Hyprland
+start-hyprland
 systemctl --user stop graphical-session.target
