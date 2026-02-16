@@ -164,15 +164,8 @@ in
       };
     };
 
-    swapDevices = [
-      {
-        device = "/swapfile";
-        size = 32 * 1024; # 32GB
-      }
-    ];
-
-    # boot.kernelPackages = pkgs.linuxPackages;
-    boot.kernelPackages = pkgs.linuxPackages_zen;
+    boot.kernelPackages = pkgs.linuxPackages;
+    # boot.kernelPackages = pkgs.linuxPackages_zen;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
     # boot.kernelPackages = pkgs.linuxPackages_6_6;
     # boot.kernelPackages = pkgs.linuxPackages_lqx;

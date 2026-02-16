@@ -1,11 +1,18 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 with lib;
 with lib.my;
 let
   inherit (config) user host;
   inherit (host) darwin;
   cfg = config.modules.dev;
-in {
+in
+{
   options.modules.dev = {
     enable = mkBoolOpt true;
     enable-all = mkBoolOpt false;
@@ -20,7 +27,8 @@ in {
         nix-direnv.enable = true;
       };
 
-      home.packages = with pkgs;
+      home.packages =
+        with pkgs;
         [
           babashka
           bun
@@ -29,6 +37,7 @@ in {
           editorconfig-core-c
           gnumake
           nil
+          ninja
           nix-init
           nixfmt
           nodePackages.stylelint
@@ -37,7 +46,12 @@ in {
           rbenv
           shellcheck
           shfmt
-        ] ++ (with pkgs.pkgs-latest; [ claude-code codex gemini-cli ])
+        ]
+        ++ (with pkgs.pkgs-latest; [
+          claude-code
+          codex
+          gemini-cli
+        ])
         ++ optionals (!darwin) [ gcc ]
         ++ optionals (host.gui) [ python3Packages.grip ]
         ++ optionals (!host.minimal) [

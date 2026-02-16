@@ -108,7 +108,6 @@ in
           ripgrep
           sqlite
           editorconfig-core-c
-          eask-cli
           emacs-lsp-booster
           mu
           isync
@@ -125,9 +124,10 @@ in
 
         xdg.configFile = {
           "doom/".source = link "${pwd}/doom.d";
+          "emacs.elpaca/".source = link "${pwd}/elpaca.d";
 
           "config-nix.el".text = ''
-            (setq! --window-opacity ${toString theme.windowOpacity})
+            (setq --window-opacity ${toString theme.windowOpacity})
           '';
         };
       };

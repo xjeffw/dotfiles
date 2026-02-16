@@ -1,0 +1,8 @@
+elpaca/
+backups/
+autosaves/
+auto-save-list/
+/tramp
+history
+*.eld
+*.sqlite
