@@ -97,7 +97,7 @@ in
         home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 
         home.sessionVariables = {
-          EMACSDIR = "${config.xdg.configHome}/emacs";
+          EMACSDIR = "${config.xdg.configHome}/emacs.elpaca";
           DOOMDIR = "${config.xdg.configHome}/doom";
           EDITOR = "emacsclient -t -a emacs";
           VISUAL = "emacsclient -t -a emacs";

@@ -5,6 +5,10 @@
 
 (setq native-comp-async-report-warnings-errors nil)
 
+(when (equal system-name "jeff-nixos")
+  (setq native-comp-compiler-options
+        '("-march=znver2" "-mtune=znver2" "-Ofast" "-ffast-math" "-flto=auto")))
+
 ;; Garbage Collection
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 1)

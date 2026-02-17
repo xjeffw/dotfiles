@@ -8,10 +8,10 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                       :pre-build ("git" "remote" "set-url" "origin" "git@github.com:progfolio/elpaca.git")
-                       :ref nil :depth 1 :inherit ignore
-                       :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                       :build (:not elpaca--activate-package)))
+                              :pre-build ("git" "remote" "set-url" "origin" "git@github.com:progfolio/elpaca.git")
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
 
 (setq elpaca-core-date '(20260215)) ;; Fix for Emacs 31 development builds
 
@@ -61,9 +61,9 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 ;; Install use-package support
 (elpaca elpaca-use-package
-        (require 'elpaca-use-package)
-        (elpaca-use-package-mode)
-        (setq use-package-always-ensure t))
+  (require 'elpaca-use-package)
+  (elpaca-use-package-mode)
+  (setq use-package-always-ensure t))
 
 (defmacro use-feature (name &rest args)
   "`use-package' for packages which do not require installation.
@@ -178,12 +178,15 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                        (if modeline? 'extrabold 'bold)))
            nil)))
 
-(progn
-  (set-face-font 'default (--get-font-spec))
-  (set-face-font 'variable-pitch (--get-font-spec t nil))
+(defun +configure-fonts (&optional frame)
+  (set-face-font 'default (--get-font-spec) frame)
+  (set-face-font 'variable-pitch (--get-font-spec t nil) frame)
   (dolist (ml '(mode-line mode-line-active mode-line-inactive))
-    (set-face-font ml (--get-font-spec nil t)))
-  (copy-face 'default 'fixed-pitch))
+    (set-face-font ml (--get-font-spec nil t) frame))
+  (copy-face 'default 'fixed-pitch frame))
+
+(+configure-fonts)
+(add-hook 'after-make-frame-functions #'+configure-fonts)
 
 ;; transparency for terminal
 ;; (set-face-background 'default "#00000000" frame)
@@ -238,14 +241,21 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     (recenter nil t))
 
   (global-override
-   "C-e" 'evil-end-of-line
-   "M-." 'evil-goto-definition
-   "M-," '+evil-jump-backward-center
-   "C-f" 'forward-sexp
-   "C-b" 'backward-sexp
-   "C-<up>" '+backward-paragraph-center
-   "C-<down>" '+forward-paragraph-center
-   "C-M-w" 'split-window-prefer-horizontal)
+    "C-1" 'delete-other-windows
+    "C-2" 'delete-other-windows-vertically
+    "C-e" 'evil-end-of-line
+    "M-." 'evil-goto-definition
+    "M-," '+evil-jump-backward-center
+    "C-f" 'forward-sexp
+    "C-b" 'backward-sexp
+    "C-<up>" '+backward-paragraph-center
+    "C-<down>" '+forward-paragraph-center
+    "C-M-w" 'split-window-prefer-horizontal)
+
+  (general-def
+    :states '(motion)
+    :keymaps 'override
+    "RET" 'newline-and-indent)
 
   (general-create-definer general-def-evil-all
     :states '(insert normal hybrid motion visual operator emacs))
@@ -310,6 +320,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
   (+general-global-menu! "buffer" "b"
     "d"  'kill-current-buffer
+    "f"  'apheleia-format-buffer
     "o" '((lambda () (interactive) (switch-to-buffer nil))
           :which-key "other-buffer")
     "p"  'previous-buffer
@@ -434,8 +445,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :after (general)
   :general
   (global-override
-   "C-o" 'other-window
-   "C-M-o" 'ace-window))
+    "C-o" 'other-window
+    "C-M-o" 'ace-window))
 
 (defmacro +pushnew! (place &rest items)
   (let ((i (make-symbol "item")))
@@ -487,23 +498,25 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
   :general
   (general-def-evil-all
-   :keymaps 'copilot-mode-map
-   "TAB" '+copilot-show-or-accept
-   "M-TAB" '+copilot-complete-or-next
-   "S-TAB" 'copilot-accept-completion-by-line
-   "C-TAB" 'copilot-accept-completion-by-word)
+    :keymaps 'copilot-mode-map
+    "TAB" '+copilot-show-or-accept
+    "M-TAB" '+copilot-complete-or-next
+    "S-TAB" 'copilot-accept-completion-by-line
+    "C-TAB" 'copilot-accept-completion-by-word)
 
   (general-def-evil-all
-   :keymaps 'copilot-completion-map
-   "TAB" 'copilot-accept-completion)
+    :keymaps 'copilot-completion-map
+    "TAB" 'copilot-accept-completion)
 
   ;; unset conflicting bindings
   (general-def-evil-all
-   :keymaps 'corfu-map
-   "TAB" nil
-   "S-TAB" nil))
+    :keymaps 'corfu-map
+    "TAB" nil
+    "S-TAB" nil))
 
-(use-package diff-hl)
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
 
 (use-package disable-mouse
   :defer 2
@@ -578,9 +591,9 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :custom
   (eglot-workspace-configuration
    '((:rust-analyzer . (:completion (:limit 5000)
-                        :inlayHints (:typeHints (:enable t)
-                                     :parameterHints (:enable t)
-                                     :chainingHints (:enable t)))))))
+                                    :inlayHints (:typeHints (:enable t)
+                                                            :parameterHints (:enable t)
+                                                            :chainingHints (:enable t)))))))
 
 (use-package evil
   :demand t
@@ -619,10 +632,15 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (use-package evil-anzu
   :after (evil anzu))
 
+(use-package evil-easymotion
+  :after (evil)
+  :config
+  (evilem-default-keybindings "g s"))
+
 (use-package evil-collection
   :ensure ( :depth 1
-                   :remotes ("origin"
-                             ("fork" :repo "progfolio/evil-collection")))
+            :remotes ("origin"
+                      ("fork" :repo "progfolio/evil-collection")))
   :after (evil)
   :config
   (setq evil-collection-mode-list (remq 'elpaca evil-collection-mode-list))
@@ -632,9 +650,46 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (evil-collection-elpaca-want-g-filters nil)
   (evil-collection-ement-want-auto-retro t))
 
+(use-package evil-commentary
+  :after (evil)
+  :config
+  (evil-commentary-mode +1))
+
+(use-package evil-matchit
+  :after (evil)
+  :init (setq evilmi-shortcut "%")
+  :config
+  (global-evil-matchit-mode t))
+
+(use-package evil-smartparens
+  :after (evil smartparens)
+  :config
+  (add-hook 'smartparens-mode-hook #'evil-smartparens-mode))
+
+(use-package evil-snipe
+  :after (evil)
+  :config
+  (setq evil-snipe-scope 'whole-visible
+        evil-snipe-repeat-scope 'whole-visible
+        evil-snipe-spillover-scope nil
+        evil-snipe-smart-case t
+        evil-snipe-tab-increment t)
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1)
+  ''(general-def
+      :states '(motion)
+      :keymaps '(evil-snipe-override-mode-map
+                 evil-snipe-override-local-mode)
+      "F" nil))
+
 (use-package anzu
   :defer 10
   :config (global-anzu-mode))
+
+(use-package apheleia
+  :config
+  (add-hook 'emacs-lisp-mode-hook (lambda () (setq-local apheleia-inhibit t)))
+  (apheleia-global-mode +1))
 
 (use-feature simple
   :general
@@ -650,6 +705,10 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (auto-revert-interval 0.01 "Instantaneously revert")
   :config
   (global-auto-revert-mode t))
+
+(use-feature display-line-numbers
+  :config
+  (global-display-line-numbers-mode t))
 
 (use-package auto-tangle-mode
   :ensure (auto-tangle-mode
@@ -690,11 +749,17 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
    "C-x C-f" #'cape-file
    "C-x C-l" #'cape-line))
 
+(defvar +default-theme 'catppuccin)
+
 (use-package catppuccin-theme
   :init
   (setq catppuccin-flavor 'frappe)
   :config
-  (load-theme 'catppuccin t))
+  (load-theme +default-theme t)
+
+  ''(when (and (eql +default-theme 'catppuccin)
+               (eql catppuccin-flavor 'frappe))
+      (set-face-foreground 'line-number (alist-get 'surface1 catppuccin-frappe-colors))))
 
 (use-package clojure-mode)
 
@@ -789,12 +854,12 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (with-eval-after-load 'evil
     (setq evil-complete-next-func (lambda (_) (completion-at-point))))
   (general-def-evil-all
-   :keymaps 'corfu-mode-map
-   "C-." 'complete-symbol
-   "C-x C-o" 'complete-symbol)
+    :keymaps 'corfu-mode-map
+    "C-." 'complete-symbol
+    "C-x C-o" 'complete-symbol)
   (general-def-evil-all
-   :keymaps 'corfu-map
-   "RET" 'corfu-complete))
+    :keymaps 'corfu-map
+    "RET" 'corfu-complete))
 
 (use-package nerd-icons-corfu
   :after (corfu)
@@ -834,11 +899,14 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (use-package doom-modeline
   :defer 2
   :config
-  (set-face-font 'doom-modeline (--get-font-spec nil t))
+  (defun +configure-modeline-fonts (&optional frame)
+    (set-face-font 'doom-modeline (--get-font-spec nil t) frame))
+  (+configure-modeline-fonts)
+  (add-hook 'after-make-frame-functions #'+configure-modeline-fonts)
 
   (doom-modeline-mode)
   :custom
-  (doom-modeline-height 29)
+  (doom-modeline-height 25)
   (doom-modeline-time-analogue-clock nil)
   (doom-modeline-time-icon nil)
   (doom-modeline-unicode-fallback nil)
@@ -949,13 +1017,13 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
             (set-visited-file-name new-name)
             (set-buffer-modified-p nil))))))
   :custom
-  (trusted-content (list "~/.emacs.d/elpaca/"))
+  (trusted-content (list "~/.config/emacs.elpaca/elpaca/"))
   (require-final-newline t "Automatically add newline at end of file")
   (backup-by-copying t)
   (backup-directory-alist `((".*" . ,(expand-file-name
-                                      (concat user-emacs-directory "backups"))))
+                                      (concat user-emacs-directory "/backups"))))
                           "Keep backups in their own directory")
-  (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
+  (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "/autosaves/") t)))
   (delete-old-versions t)
   (kept-new-versions 10)
   (kept-old-versions 5)
@@ -1418,9 +1486,9 @@ default/fallback account."
 (use-package sly)
 
 (use-package smartparens
+  :defer 1
   :config
-  ;; TODO: configure this
-  )
+  (smartparens-global-mode))
 
 (elpaca (straight.el :host github
                      :repo "radian-software/straight.el"

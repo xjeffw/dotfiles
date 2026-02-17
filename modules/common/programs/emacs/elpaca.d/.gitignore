@@ -1,8 +1,11 @@
-elpaca/
-backups/
-autosaves/
-auto-save-list/
+.*
+/elpaca/
+/backups/
+/autosaves/
+/auto-save-list/
 /tramp
-history
+/history
+/transient
+/persp-confs
 *.eld
 *.sqlite
