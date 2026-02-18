@@ -115,6 +115,7 @@ in {
         coreutils
         curl
         file
+        flamegraph
         gnumake
         inetutils
         iotop
@@ -125,8 +126,10 @@ in {
         nix-index
         openssh
         openssl
+        perf
         pinentry-curses
         pkg-config
+        pprof
         psmisc
         readline
         sshfs

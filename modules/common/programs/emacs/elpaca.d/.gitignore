@@ -9,3 +9,6 @@
 /persp-confs
 *.eld
 *.sqlite
+flamegraph.svg
+recentf
+perf.data*

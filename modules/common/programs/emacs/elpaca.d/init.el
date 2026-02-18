@@ -23,10 +23,13 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       (apply orig-fun nil nil)
     (let ((output (apply #'format-message format-string args)))
       (unless (or (string-match ".*when-let.*" output)
-                  (string-match ".*if-let.*" output))
+                  (string-match ".*if-let.*" output)
+                  (string-match ".*Missing .lexical-binding. cookie.*" output))
         (apply orig-fun format-string args)))))
 
 (advice-add 'message :around #'+filter-messages)
+
+(add-to-list 'warning-suppress-types '(files))
 
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
@@ -240,6 +243,10 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     (evil-jump-backward)
     (recenter nil t))
 
+  (defun +reload-emacs ()
+    (interactive)
+    (load-file (expand-file-name "init.el" user-emacs-directory)))
+
   (global-override
     "C-1" 'delete-other-windows
     "C-2" 'delete-other-windows-vertically
@@ -250,7 +257,9 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     "C-b" 'backward-sexp
     "C-<up>" '+backward-paragraph-center
     "C-<down>" '+forward-paragraph-center
-    "C-M-w" 'split-window-prefer-horizontal)
+    "C-M-w" 'split-window-prefer-horizontal
+    "C-<left>" 'previous-buffer
+    "C-<right>" 'next-buffer)
 
   (general-def
     :states '(motion)
@@ -287,18 +296,22 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
             :which-key "zoom"))
 
   (defmacro +general-global-menu! (name prefix-key &rest body)
-    "Create a definer named +general-global-NAME wrapping global-definer.
-  Create prefix map: +general-global-NAME-map. Prefix bindings in BODY with PREFIX-KEY."
+    "Create a definer named +general-global-NAME bound under PREFIX-KEY.
+Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
     (declare (indent 2))
     (let* ((n (concat "+general-global-" name))
-           (prefix-map (intern (concat n "-map"))))
+           (prefix-map (intern (concat n "-map")))
+           (prefix-cmd (intern (concat n "-cmd"))))
       `(progn
+         (global-definer
+           ,prefix-key
+           (list :prefix-command ',prefix-cmd
+                 :prefix-map ',prefix-map
+                 :prefix-name ,name
+                 :which-key ,name))
          (general-create-definer ,(intern n)
-           :wrapping global-definer
-           :prefix-map (quote ,prefix-map)
-           :prefix ,prefix-key
-           :wk-full-keys nil
-           "" '(:ignore t :which-key ,name))
+           :keymaps ',prefix-map
+           :wk-full-keys nil)
          (,(intern n) ,@body))))
 
   (+general-global-menu! "application" "a"
@@ -392,6 +405,9 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     "q" 'save-buffers-kill-emacs
     "r" 'restart-emacs
     "Q" 'kill-emacs)
+
+  (+general-global-menu! "reload" "r"
+    "r" '(+reload-emacs :which-key "+reload-emacs"))
 
   (+general-global-menu! "spelling" "s")
 
@@ -761,7 +777,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                (eql catppuccin-flavor 'frappe))
       (set-face-foreground 'line-number (alist-get 'surface1 catppuccin-frappe-colors))))
 
-(use-package clojure-mode)
+(use-package clojure-mode
+  :mode "\\.rex\\'")
 
 (use-package cider
   :after (clojure-mode)
@@ -1060,8 +1077,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     "ff" '((lambda () (interactive) (flymake-mode 'toggle)) :which-key "toggle flymake-mode")
     "fn" 'flymake-goto-next-error
     "fp" 'flymake-goto-prev-error)
-  :hook (flymake-mode . (lambda () (or (ignore-errors flymake-show-project-diagnostics)
-                                       (flymake-show-buffer-diagnostics))))
   :config
   (add-to-list 'display-buffer-alist
                '("\\`\\*[Ff]lymake.*?\\*\\'"
@@ -1428,7 +1443,8 @@ default/fallback account."
     "i" 'projectile-invalidate-cache
     "k" 'projectile-kill-buffers
     "R" 'projectile-replace
-    "s" 'projectile-save-project-buffers
+    "S" 'projectile-save-project-buffers
+    "s" 'projectile-ripgrep
     "T" 'projectile-test-project
     "v" 'projectile-vc
 
@@ -1463,14 +1479,6 @@ default/fallback account."
 (use-package rainbow-mode
   :commands (rainbow-mode))
 
-(use-package uniquify
-  :disabled t
-  :config
-  (setq uniquify-buffer-name-style 'post-forward
-        uniquify-separator "|"
-        uniquify-after-kill-buffer-p t
-        uniquify-ignore-buffers-re "^\\*"))
-
 (use-feature re-builder
   :custom
   (reb-re-syntax 'rx)
@@ -1482,6 +1490,8 @@ default/fallback account."
   :custom
   (recentf-max-menu-items 1000 "Offer more recent files in menu")
   (recentf-max-saved-items 1000 "Save more recent files"))
+
+(use-package rg)
 
 (use-package sly)
 
