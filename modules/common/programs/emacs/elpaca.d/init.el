@@ -472,15 +472,14 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
 ;; (setq asd '(1))
 ;; (+pushnew! asd 2 3 4)
 
+(use-package track-changes)
+
 (use-package copilot
   :after (corfu)
   :defer 2
   :commands copilot-mode
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
-  :config
-  (unless (file-exists-p (copilot-server-executable))
-    (copilot-install-server))
 
   (setq copilot-idle-delay 0
         copilot-max-char 100000
@@ -833,7 +832,9 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
     "/" 'consult-org-heading)
   (global-definer "/" 'consult-line)
   (+general-global-buffer "b" 'consult-buffer)
-  (+general-global-project "a" 'consult-grep)
+  (global-definer "," 'consult-buffer)
+  (global-definer "<" 'switch-to-buffer)
+  (+general-global-project "s" 'consult-git-grep)
   (+general-global-file
     ;;"f" 'consult-file
     "r" 'consult-recent-file))
@@ -1438,13 +1439,11 @@ default/fallback account."
     "c" 'projectile-compile-project
     "D" 'projectile-discover-projects-in-directory
     "e" 'projectile-edit-dir-locals
-    "g" 'projectile-find-tag
-    "G" 'projectile-regenerate-tags
+    "g" 'projectile-ripgrep
     "i" 'projectile-invalidate-cache
     "k" 'projectile-kill-buffers
     "R" 'projectile-replace
     "S" 'projectile-save-project-buffers
-    "s" 'projectile-ripgrep
     "T" 'projectile-test-project
     "v" 'projectile-vc
 
