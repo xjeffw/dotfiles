@@ -7,7 +7,7 @@
 
 (when (equal system-name "jeff-nixos")
   (setq native-comp-compiler-options
-        '("-march=znver2" "-mtune=znver2" "-Ofast" "-ffast-math" "-flto=auto")))
+        '("-march=znver2" "-mtune=znver2")))
 
 ;; Garbage Collection
 (setq gc-cons-threshold most-positive-fixnum
