@@ -38,53 +38,62 @@
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
     hyprland.url = "github:hyprwm/Hyprland";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
+    hyprlock.url = "github:hyprwm/hyprlock";
   };
 
-  outputs = { self, ... }@inputs:
+  outputs =
+    { self, ... }@inputs:
     let
       # extend lib with custom functions under lib.my
-      lib = inputs.nixpkgs.lib.extend (final: prev: {
-        my = import ./lib {
-          inherit inputs;
-          # - make nixpkgs.lib available within ./lib
-          # - provide for references between files in ./lib
-          lib = final;
-        };
-      });
+      lib = inputs.nixpkgs.lib.extend (
+        final: prev: {
+          my = import ./lib {
+            inherit inputs;
+            # - make nixpkgs.lib available within ./lib
+            # - provide for references between files in ./lib
+            lib = final;
+          };
+        }
+      );
 
-      nixpkgsConfig = { allowUnfree = true; };
+      nixpkgsConfig = {
+        allowUnfree = true;
+      };
 
       overlays = import ./nix/overlays.nix { inherit inputs nixpkgsConfig; };
 
-      mapHosts' = dir: system:
+      mapHosts' =
+        dir: system:
         lib.my.mapHosts dir {
           inherit system nixpkgsConfig self;
           overlays = lib.attrValues overlays;
         };
-    in {
+    in
+    {
       inherit inputs lib;
 
-      nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
-        // (mapHosts' ./hosts/asahi "aarch64-linux");
+      nixosConfigurations =
+        (mapHosts' ./hosts/nixos "x86_64-linux") // (mapHosts' ./hosts/asahi "aarch64-linux");
 
       darwinConfigurations = mapHosts' ./hosts/darwin "aarch64-darwin";
 
       # define default home-manager configuration to support nixd completion
-      homeConfigurations.default =
-        inputs.home-manager.lib.homeManagerConfiguration {
-          inherit lib;
-          pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
-          modules = [
-            ({ lib, config, ... }: {
-              options =
-                (import ./hosts/options.nix { inherit lib config; }).options;
+      homeConfigurations.default = inputs.home-manager.lib.homeManagerConfiguration {
+        inherit lib;
+        pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
+        modules = [
+          (
+            { lib, config, ... }:
+            {
+              options = (import ./hosts/options.nix { inherit lib config; }).options;
               config = {
                 home.username = "${config.user.name}";
                 home.homeDirectory = "${config.user.home}";
                 home.stateVersion = "24.05";
               };
-            })
-          ];
-        };
+            }
+          )
+        ];
+      };
     };
 }

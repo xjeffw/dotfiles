@@ -36,7 +36,8 @@ in
             kb_options = ctrl:nocaps
         }
       '';
-      desktop.hyprland.flake = false;
+      desktop.hyprland.flake = true;
+      desktop.hyprland.hyprlockFlake = true;
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       programs.mpv.extraConf = ''
         vo=gpu
