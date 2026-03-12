@@ -105,7 +105,6 @@ in
             fetch = [
               fastfetch
               inxi
-              neofetch
               screenfetch
             ];
             media = [
