@@ -44,6 +44,10 @@ in {
     services.guix = mkIf modules.guix.enable { enable = true; };
 
     services.dbus.enable = true;
+    services.earlyoom = {
+      enable = true;
+      extraArgs = [ "--prefer" "rust-analyzer|language-server|lsp" ];
+    };
     services.openssh.enable = true;
     services.openssh.ports = mkDefault [ 22 ];
     services.openssh.openFirewall = true;

@@ -67,6 +67,7 @@ in
               gnused
               inetutils
               jq
+              pkgs-stable.less
               procs
               tmux
               w3m
@@ -75,7 +76,7 @@ in
             tools = [
               autossh
               babashka
-              bat
+              pkgs-stable.bat
               glow
               gpg-tui
               graphicsmagick

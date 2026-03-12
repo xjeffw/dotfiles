@@ -16,4 +16,6 @@ install_qlot() {
 
 qlot="$HOME/.qlot/bin/qlot"
 
+eval "$(mkenv)"
+
 $qlot $args

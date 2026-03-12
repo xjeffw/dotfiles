@@ -251,15 +251,20 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     "C-1" 'delete-other-windows
     "C-2" 'delete-other-windows-vertically
     "C-e" 'evil-end-of-line
-    "M-." 'evil-goto-definition
-    "M-," '+evil-jump-backward-center
+    "M-." nil
+    "M-," nil
+    "C-." nil
+    "C-," nil
+    ;; "M-." 'evil-goto-definition
+    ;; "M-," '+evil-jump-backward-center
     "C-f" 'forward-sexp
     "C-b" 'backward-sexp
     "C-<up>" '+backward-paragraph-center
     "C-<down>" '+forward-paragraph-center
     "C-M-w" 'split-window-prefer-horizontal
     "C-<left>" 'previous-buffer
-    "C-<right>" 'next-buffer)
+    "C-<right>" 'next-buffer
+    "C-y" 'yank)
 
   (general-def
     :states '(motion)
@@ -281,7 +286,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                   (replace-regexp-in-string "-mode$" "" (symbol-name major-mode))))))
 
   (global-definer
-    "/"   'occur
     "!"   'shell-command
     ":"   'eval-expression
     ";"   'execute-extended-command
@@ -294,6 +298,11 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                     (current-prefix-arg nil))
                 (call-interactively (if local #'text-scale-adjust #'global-text-scale-adjust))))
             :which-key "zoom"))
+
+  (general-def-evil-all
+    :keymaps 'prog-mode-map
+    "C-." nil
+    "C-," nil)
 
   (defmacro +general-global-menu! (name prefix-key &rest body)
     "Create a definer named +general-global-NAME bound under PREFIX-KEY.
@@ -784,7 +793,11 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
   :hook (clojure-mode . cider-mode)
   :config
   (setq cider-repl-use-pretty-printing t)
-  (setq cider-repl-display-in-current-window t))
+  (setq cider-repl-display-in-current-window t)
+  (general-def-evil-all
+    :keymaps '(clojure-mode-map)
+    "M-." 'evil-goto-definition
+    "M-," '+evil-jump-backward-center))
 
 (use-feature compile
   :commands (compile recompile)
@@ -873,7 +886,7 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
     (setq evil-complete-next-func (lambda (_) (completion-at-point))))
   (general-def-evil-all
     :keymaps 'corfu-mode-map
-    "C-." 'complete-symbol
+    "C-." nil
     "C-x C-o" 'complete-symbol)
   (general-def-evil-all
     :keymaps 'corfu-map
@@ -963,6 +976,10 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
   :init
   (setq lisp-indent-offset nil)
   :config
+  (general-def-evil-all
+    :keymaps '(emacs-lisp-mode-map lisp-interaction-mode-map)
+    "M-." 'evil-goto-definition
+    "M-," '+evil-jump-backward-center)
   (global-leader
     :major-modes '(emacs-lisp-mode lisp-interaction-mode t)
     :keymaps     '(emacs-lisp-mode-map lisp-interaction-mode-map)
@@ -1188,6 +1205,8 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
   :config
   ;; TODO: configure this
   )
+
+(use-package lisp-mode)
 
 (use-package macrostep
   :config
@@ -1492,7 +1511,20 @@ default/fallback account."
 
 (use-package rg)
 
-(use-package sly)
+(use-feature rust-ts-mode
+  :config
+  (general-def-evil-all
+    :keymaps 'rust-ts-mode-map
+    "M-." 'evil-goto-definition
+    "M-," '+evil-jump-backward-center))
+
+(use-package sly
+  :config
+  (general-def-evil-all
+    :keymaps 'sly-mode-map
+    "M-." 'sly-edit-definition
+    "C-." 'sly-next-note
+    "C-," 'sly-previous-note))
 
 (use-package smartparens
   :defer 1
