@@ -27,7 +27,7 @@
 
 (def all-devices
   ;; device id = "VENDOR_ID:PRODUCT_ID"
-  {:mouse        {:id ["1038" "1848"]}
+  {:mouse        {:id ["1038" "184a"]}
    :keyboard     {:id ["0853" "0100"]}
    :steam        {:id ["28de" "1142"]}
    :rocksmith    {:id ["12ba" "00ff"]}

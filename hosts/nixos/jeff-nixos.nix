@@ -62,6 +62,11 @@ in
     # services.deluge.enable = true;
     # services.deluge.web.enable = true;
 
+    services.guix = {
+      enable = true;
+      gc.enable = true;
+    };
+
     services.nginx = {
       enable = true;
       recommendedOptimisation = true;

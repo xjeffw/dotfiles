@@ -15,6 +15,9 @@ in {
       home.packages = with pkgs; [
         bash-language-server
         cmake-language-server
+        guile-lsp-server
+        guile
+        schemat
         gnuplot
         go
         html-tidy
