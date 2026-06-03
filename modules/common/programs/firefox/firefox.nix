@@ -19,6 +19,7 @@ in {
       in {
         programs.firefox = {
           enable = true;
+          configPath = "${config.xdg.configHome}/mozilla/firefox";
           profiles.default = mkIf (cfg.profilePath != null) {
             id = 0;
             name = "default";

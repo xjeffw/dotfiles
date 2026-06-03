@@ -7,7 +7,6 @@ in {
 
   config = mkIf modules.desktop.enable {
     nixpkgs.overlays = [
-      (final: prev: { pass = prev.pass-wayland; })
       (final: prev: {
         wl-clipboard-x11 = prev.stdenv.mkDerivation rec {
           pname = "wl-clipboard-x11";

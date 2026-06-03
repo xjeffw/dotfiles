@@ -116,6 +116,7 @@ in {
     environment.systemPackages = with pkgs;
       [
         binutils
+        bubblewrap
         coreutils
         curl
         file

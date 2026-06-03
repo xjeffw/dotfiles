@@ -25,8 +25,8 @@ in {
 
       home.packages = with pkgs; [ luarocks neovide lua-language-server ];
 
-      xdg.configFile."nvim/".source =
-        config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
+      xdg.configFile."nvim/".source = ./config;
+        # config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
     };
   };
 }

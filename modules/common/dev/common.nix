@@ -40,8 +40,8 @@ in
           ninja
           nix-init
           nixfmt
-          nodePackages.stylelint
-          nodePackages.prettier
+          stylelint
+          prettier
           nodejs_latest
           rbenv
           shellcheck

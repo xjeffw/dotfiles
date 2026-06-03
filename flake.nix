@@ -4,7 +4,7 @@
   inputs = {
     ### System
     # nixpkgs.url = "github:NixOS/nixpkgs/c5ae371f1a6a7fd27823";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-2311.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-latest.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -14,7 +14,8 @@
     # nixos-apple-silicon.inputs.rust-overlay.follows = "rust-overlay";
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    # home-manager.url = "github:nix-community/home-manager/release-26.05";
+    home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     ### Nix helpers
     flake-utils.url = "github:numtide/flake-utils";
@@ -36,7 +37,7 @@
     nil-server.inputs.nixpkgs.follows = "nixpkgs";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland?ref=0002f148c9a4fe421a9d33c0faa5528cdc411e62";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprlock.url = "github:hyprwm/hyprlock";
   };

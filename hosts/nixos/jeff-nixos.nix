@@ -16,13 +16,14 @@ let
       libvdpau
       libva-vdpau-driver
     ];
-  mesaPkgs = getMesaPkgs pkgs ++ (with pkgs; [ rocmPackages.clr.icd ]);
+  mesaPkgs = getMesaPkgs pkgs;
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
 in
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
+    nixpkgs.config.rocmSupport = true;
     host.optimize = true;
     modules = {
       linux.systemd-boot.enable = true;
@@ -36,8 +37,8 @@ in
             kb_options = ctrl:nocaps
         }
       '';
-      desktop.hyprland.flake = true;
-      desktop.hyprland.hyprlockFlake = true;
+      desktop.hyprland.flake = false;
+      desktop.hyprland.hyprlockFlake = false;
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       programs.mpv.extraConf = ''
         vo=gpu
@@ -90,8 +91,6 @@ in
       libguestfs
       # ansel # darktable
       amdgpu_top
-      # input-leap_git
-      # waynergy_git
     ];
 
     environment.etc = {
@@ -170,8 +169,8 @@ in
       };
     };
 
-    boot.kernelPackages = pkgs.linuxPackages;
-    # boot.kernelPackages = pkgs.linuxPackages_zen;
+    # boot.kernelPackages = pkgs.linuxPackages;
+    boot.kernelPackages = pkgs.linuxPackages_zen;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
     # boot.kernelPackages = pkgs.linuxPackages_6_6;
     # boot.kernelPackages = pkgs.linuxPackages_lqx;
@@ -196,7 +195,6 @@ in
       "vfio_pci_core"
       "irqbypass"
       "iommufd"
-      "amdgpu"
     ];
     boot.blacklistedKernelModules = [
       "nouveau"
@@ -224,12 +222,14 @@ in
 
     hardware.graphics = {
       enable = true;
+      enable32Bit = true;
       extraPackages = mesaPkgs;
       extraPackages32 = mesaPkgs32;
     };
 
     hardware.amdgpu = {
       opencl.enable = true;
+      initrd.enable = true;
     };
 
     nix.settings.max-jobs = 3;
