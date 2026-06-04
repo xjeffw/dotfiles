@@ -489,7 +489,7 @@ Create prefix map: +general-global-NAME-map. Bind BODY keys inside that map."
   :commands copilot-mode
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
-
+  :config
   (setq copilot-idle-delay 0
         copilot-max-char 100000
         copilot-indent-offset-warning-disable t)

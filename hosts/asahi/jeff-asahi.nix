@@ -1,7 +1,16 @@
-{ config, lib, pkgs, inputs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  modulesPath,
+  ...
+}:
 with lib;
-let inherit (config) user;
-in {
+let
+  inherit (config) user;
+in
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
@@ -30,6 +39,11 @@ in {
         musicDirectory = "/mnt/huge/Music";
       };
     };
+
+    services.guix = {
+      enable = true;
+      gc.enable = true;
+    };
     ## asahi system
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = false;
@@ -37,7 +51,10 @@ in {
     hardware.asahi.peripheralFirmwareDirectory = ./firmware;
     services.pipewire.alsa.support32Bit = mkForce false;
     ## kernel
-    boot.initrd.availableKernelModules = [ "usb_storage" "sdhci_pci" ];
+    boot.initrd.availableKernelModules = [
+      "usb_storage"
+      "sdhci_pci"
+    ];
     boot.initrd.kernelModules = [ ];
     boot.kernelModules = [ ];
     boot.extraModulePackages = [ ];
