@@ -9,6 +9,7 @@
 }:
 with lib;
 let
+  system = pkgs.stdenv.hostPlatform.system;
   getMesaPkgs =
     pkgsBase: with pkgsBase; [
       libvdpau-va-gl
@@ -87,6 +88,7 @@ in
     };
 
     environment.systemPackages = with pkgs; [
+      inputs.antigravity-nix.packages.${system}.google-antigravity-cli
       linux-firmware
       libguestfs
       # ansel # darktable

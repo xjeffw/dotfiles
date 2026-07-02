@@ -40,6 +40,8 @@
     hyprland.url = "github:hyprwm/Hyprland?ref=0002f148c9a4fe421a9d33c0faa5528cdc411e62";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprlock.url = "github:hyprwm/hyprlock";
+    antigravity-nix.url = "github:jacopone/antigravity-nix";
+    antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
