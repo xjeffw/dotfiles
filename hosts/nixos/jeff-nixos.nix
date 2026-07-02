@@ -147,27 +147,12 @@ in
 
     fileSystems = {
       "/" = {
-        device = "/dev/disk/by-uuid/77f52a6d-7ee3-44c8-ade9-0628efb1b63f";
+        device = "/dev/disk/by-uuid/b7193db5-0bc4-4550-834f-2129b2f8cea2";
         fsType = "ext4";
       };
       "/boot" = {
         device = "/dev/disk/by-uuid/644B-90E7";
         fsType = "vfat";
-      };
-      "/mnt/arch" = {
-        device = "/dev/disk/by-label/arch_os_nvme";
-        neededForBoot = true;
-        fsType = "ext4";
-      };
-      "/nix" = {
-        device = "/mnt/arch/nix";
-        depends = [
-          "/"
-          "/mnt/arch"
-        ];
-        neededForBoot = true;
-        fsType = "none";
-        options = [ "bind" ];
       };
     };
 
