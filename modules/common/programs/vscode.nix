@@ -37,7 +37,7 @@ in {
               git
               # neovim
               nil
-              nixfmt-classic
+              nixfmt
               nodejs
               openssh
               openssl.dev

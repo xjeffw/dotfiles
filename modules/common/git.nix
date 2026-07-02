@@ -10,10 +10,10 @@ in {
       programs.git = {
         enable = true;
         package = optimize config pkgs.git;
-        userName = "${config.user.full-name}";
-        userEmail = "${config.user.email}";
         lfs.enable = true;
         settings = {
+          user.name = "${config.user.full-name}";
+          user.email = "${config.user.email}";
           push.default = "current";
           pull.rebase = true;
           init.defaultBranch = "main";

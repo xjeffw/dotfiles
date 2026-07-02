@@ -211,14 +211,14 @@ in {
           ++ optionals cfg.steam [ steamcmd steam-tui ];
         x11 = with pkgs; [
           mesa-demos
-          xorg.xev
-          xorg.xkbcomp
-          xorg.xkill
-          xorg.xprop
-          xorg.xrandr
-          xorg.xrdb
-          xorg.xset
-          xorg.xwininfo
+          xev
+          xkbcomp
+          xkill
+          xprop
+          xrandr
+          xrdb
+          xset
+          xwininfo
           xterm
         ];
         themes = with pkgs;
@@ -264,6 +264,7 @@ in {
           cursorTheme.size = 24;
           iconTheme.name = "Papirus";
           iconTheme.package = pkgs.catppuccin-papirus-folders;
+          gtk4.theme = config.gtk.theme;
           # theme.name = "Catppuccin-Macchiato-Compact-Blue-Dark";
           # theme.package = catppuccin-macchiato;
 

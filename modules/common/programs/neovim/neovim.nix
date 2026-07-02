@@ -15,6 +15,8 @@ in {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       programs.neovim = {
         enable = true;
+        withPython3 = true;
+        withRuby = true;
         viAlias = true;
         vimAlias = true;
         extraPackages = with pkgs;
