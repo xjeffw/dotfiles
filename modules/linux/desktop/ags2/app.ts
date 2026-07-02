@@ -12,7 +12,7 @@ const startBars = (monitors: Gdk.Monitor[]) => {
   for (const monitor of monitors) {
     const idx = monitors.indexOf(monitor);
     bars.push(TopBar({ monitorId: idx, monitor }));
-    bars.push(BottomBar({ monitorId: idx, monitor }));
+    // bars.push(BottomBar({ monitorId: idx, monitor }));
   }
 };
 
