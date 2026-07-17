@@ -126,6 +126,7 @@ in
             extra = [
               asciinema
               asciinema-agg
+              pixcat
               termtosvg
               timg
             ];

@@ -48,6 +48,7 @@ in
           shfmt
         ]
         ++ (with pkgs.pkgs-latest; [
+          inputs.antigravity-nix.packages.${system}.google-antigravity-cli
           claude-code
           codex
           gemini-cli

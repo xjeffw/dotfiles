@@ -13,7 +13,7 @@ in {
     else
       "JetBrainsMono NF Bold");
     fontStyle = mkOpt str theme.monoStyle;
-    fontSize = mkOpt number (if host.darwin then 12.0 else 10.0);
+    fontSize = mkOpt number (if host.darwin then 12.0 else 9.0);
     opacity = mkOpt float theme.windowOpacity;
     colors = with theme.colors; { background = mkOpt str background; };
   };

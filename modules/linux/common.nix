@@ -131,6 +131,7 @@ in {
         nix-index
         openssh
         openssl
+        parted
         perf
         pinentry-curses
         pkg-config

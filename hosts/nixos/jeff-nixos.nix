@@ -88,7 +88,6 @@ in
     };
 
     environment.systemPackages = with pkgs; [
-      inputs.antigravity-nix.packages.${system}.google-antigravity-cli
       linux-firmware
       libguestfs
       # ansel # darktable
