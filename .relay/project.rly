@@ -1,0 +1,8 @@
+{
+  :build-commands
+    [
+      {:command "sudo nixos-rebuild build", :name "build"}
+      {:command "sudo nixos-rebuild switch", :name "switch"}
+    ]
+  :test-commands []
+}

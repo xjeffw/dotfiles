@@ -69,6 +69,23 @@ in
       gc.enable = true;
     };
 
+    systemd.user.services.scream-watchdog = {
+      description = "Periodically restart Scream";
+      wantedBy = [ "default.target" ];
+      after = [ "scream.service" ];
+      serviceConfig = {
+        Type = "exec";
+        ExecStart = pkgs.writeShellScript "scream-watchdog" ''
+          while true; do
+            ${pkgs.systemd}/bin/systemctl --user restart scream.service
+            ${pkgs.coreutils}/bin/sleep 2m
+          done
+        '';
+        Restart = "always";
+        RestartSec = "2m";
+      };
+    };
+
     services.nginx = {
       enable = true;
       recommendedOptimisation = true;
