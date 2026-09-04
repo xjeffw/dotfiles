@@ -27,6 +27,8 @@
     ags.inputs.astal.follows = "astal";
     astal.url = "github:jeffwkm/astal";
     astal.inputs.nixpkgs.follows = "nixpkgs";
+    hyprshell.url = "github:xjeffw/hyprshell";
+    hyprshell.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     nil-server.url = "github:oxalica/nil";
