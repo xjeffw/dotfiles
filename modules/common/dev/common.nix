@@ -51,7 +51,6 @@ in
           inputs.antigravity-nix.packages.${system}.google-antigravity-cli
           claude-code
           codex
-          gemini-cli
         ])
         ++ optionals (!darwin) [ gcc ]
         ++ optionals (host.gui) [ python3Packages.grip ]
