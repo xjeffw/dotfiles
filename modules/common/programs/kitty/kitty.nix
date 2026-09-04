@@ -29,8 +29,7 @@ in {
           background_opacity ${toString cfg.opacity}
         '';
         xdg.configFile."kitty/kitty.conf".text = mkIf host.darwin ''
-          # include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf
-          include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Frappe.conf
+          include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf
           shell_integration no-rc no-cursor
 
           include ~/.config/kitty/nix.conf
@@ -43,8 +42,7 @@ in {
             include ~/.config/kitty/nix.conf
             include ~/.config/kitty/extra.conf
           '';
-          # themeFile = "Catppuccin-Macchiato";
-          themeFile = "Catppuccin-Frappe";
+          themeFile = "Catppuccin-Macchiato";
           shellIntegration.mode = "no-rc no-cursor";
         };
       };
