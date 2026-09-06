@@ -40,6 +40,8 @@ in
       };
     };
 
+    services.upower.enable = true;
+
     services.guix = {
       enable = true;
       gc.enable = true;
