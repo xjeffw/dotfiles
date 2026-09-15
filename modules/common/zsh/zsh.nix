@@ -218,6 +218,13 @@ let
           if (( now > ZSHRC_LAST_LOADED )); then
             ZSHRC_LAST_LOADED=$now
             export ZSHRC_LAST_LOADED
+            # Home Manager's `typeset -U path cdpath fpath manpath` in .zshrc
+            # creates empty locals when sourced inside a function. Seed them
+            # with the current values so PATH and the other search paths survive.
+            local -a path=("''${path[@]}")
+            local -a cdpath=("''${cdpath[@]}")
+            local -a fpath=("''${fpath[@]}")
+            local -a manpath=("''${manpath[@]}")
             source "$rc"
             print -r -- $'\e[1;92mReloaded ~/.zshrc\e[0m'
           fi
