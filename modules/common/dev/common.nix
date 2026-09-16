@@ -32,6 +32,7 @@ in
         [
           babashka
           bun
+          claude-code
           direnv
           editorconfig-checker
           editorconfig-core-c
@@ -49,7 +50,6 @@ in
         ]
         ++ (with pkgs.pkgs-latest; [
           inputs.antigravity-nix.packages.${system}.google-antigravity-cli
-          claude-code
           codex
         ])
         ++ optionals (!darwin) [ gcc ]

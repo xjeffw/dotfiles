@@ -1,4 +1,20 @@
 { inputs, nixpkgsConfig, ... }: {
+  claude-code = final: prev:
+    let
+      platform = final.stdenv.hostPlatform.node;
+      src = inputs."claude-code-src-${platform.platform}-${platform.arch}";
+    in {
+      # Keep nixpkgs-latest's runtime dependencies, patching, wrapper, and version check.
+      claude-code = final.pkgs-latest.claude-code.overrideAttrs (old: {
+        inherit src;
+        version = (builtins.fromJSON (builtins.readFile "${src}/package.json")).version;
+        dontUnpack = false;
+        installPhase = builtins.replaceStrings
+          [ "unzstd -q $src -o $out/bin/claude" ]
+          [ "install -m755 claude $out/bin/claude" ]
+          old.installPhase;
+      });
+    };
   fastStdenv = final: prev: {
     final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
   };

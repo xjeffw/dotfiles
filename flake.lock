@@ -97,6 +97,45 @@
         "type": "github"
       }
     },
+    "claude-code-src-darwin-arm64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 499162500,
+        "narHash": "sha256-wGO6ikpFocKhgsl+aXcDeunR2MwirncORncYRR3SZ14=",
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.273.tgz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.273.tgz"
+      }
+    },
+    "claude-code-src-linux-arm64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 499162500,
+        "narHash": "sha256-km6lRdm287kz2NDiWLfJnDPR1oq1oIONlriH7cJC9iM=",
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.273.tgz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.273.tgz"
+      }
+    },
+    "claude-code-src-linux-x64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 499162500,
+        "narHash": "sha256-9bn2U0abOx3+7nue2x0wY4C9fwIZ8INnSajFV2c/z7Q=",
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.273.tgz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.273.tgz"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -1045,6 +1084,9 @@
         "ags": "ags",
         "antigravity-nix": "antigravity-nix",
         "astal": "astal",
+        "claude-code-src-darwin-arm64": "claude-code-src-darwin-arm64",
+        "claude-code-src-linux-arm64": "claude-code-src-linux-arm64",
+        "claude-code-src-linux-x64": "claude-code-src-linux-x64",
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "flake-compat": "flake-compat",
