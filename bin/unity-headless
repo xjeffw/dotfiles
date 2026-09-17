@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Private headless Sway session, following ~/code/relay/headless/gui.sh.
+# Usage: unity-headless start [command args...]
+#        unity-headless {run command args...|status|shot [path]|stop}
+set -euo pipefail
+
+state_dir="${UNITY_HEADLESS_DIR:-/tmp/unity-headless-$(id -u)}"
+runtime_dir="$state_dir/runtime"
+export SWAYSOCK="$runtime_dir/ipc.sock"
+
+session_env() {
+  local socket
+  for socket in "$runtime_dir"/wayland-*; do
+    if [[ -S $socket ]]; then
+      env -u LD_LIBRARY_PATH -u DISPLAY XDG_RUNTIME_DIR="$runtime_dir" \
+        WAYLAND_DISPLAY="${socket##*/}" "$@"
+      return
+    fi
+  done
+  echo 'No headless Wayland session is running.' >&2
+  return 1
+}
+
+windows() {
+  swaymsg -t get_tree | jq '[recurse(.nodes[]?, .floating_nodes[]?)
+    | select(.type == "con" and .pid != null)
+    | {pid, name, app_id, window_properties, visible}]'
+}
+
+launch() {
+  (($# > 0)) || { echo 'A command is required.' >&2; return 1; }
+  local command log_path
+  printf -v command '%q ' "$@"
+  printf -v log_path '%q' "$state_dir/app.log"
+  # Sway supplies its private Xwayland DISPLAY and session bus to the client.
+  swaymsg "exec $command >> $log_path 2>&1"
+}
+
+case "${1:-status}" in
+  start)
+    shift
+    if swaymsg -t get_version >/dev/null 2>&1; then
+      echo 'Session already running; use run or stop.' >&2
+      exit 1
+    fi
+    mkdir -p "$runtime_dir"
+    chmod 700 "$state_dir" "$runtime_dir"
+    rm -f "$SWAYSOCK"
+    : > "$state_dir/app.log"
+    cat > "$state_dir/sway.conf" <<'EOF'
+output HEADLESS-1 mode 1600x1000 scale 1
+default_border none
+default_floating_border none
+for_window [shell=".*"] floating disable
+focus_follows_mouse no
+seat seat0 fallback true
+xwayland force
+EOF
+    nohup env -u LD_LIBRARY_PATH -u DISPLAY -u WAYLAND_DISPLAY \
+      XDG_RUNTIME_DIR="$runtime_dir" WLR_BACKENDS=headless \
+      WLR_LIBINPUT_NO_DEVICES=1 \
+      dbus-run-session -- sway --config "$state_dir/sway.conf" \
+      > "$state_dir/sway.log" 2>&1 < /dev/null &
+    for ((i = 0; i < 150; i++)); do
+      swaymsg -t get_version >/dev/null 2>&1 && break
+      sleep 0.2
+    done
+    [[ -S $SWAYSOCK ]] || { cat "$state_dir/sway.log" >&2; exit 1; }
+    if (($# == 0)); then set -- unityhub; fi
+    launch "$@"
+    echo "Logs and screenshots: $state_dir"
+    ;;
+  run) shift; launch "$@" ;;
+  status) windows ;;
+  shot) session_env grim "${2:-$state_dir/shot.png}" ;;
+  stop)
+    # First-run dialogs can keep Unity alive after the display disappears.
+    while read -r pid; do kill -TERM "$pid" 2>/dev/null || true; done \
+      < <(windows | jq -r '.[].pid' | sort -u)
+    # Sway can close IPC before returning the response to its exit command.
+    swaymsg exit >/dev/null 2>&1 || true
+    ;;
+  *) echo 'Usage: unity-headless {start [command args...]|run command args...|status|shot [path]|stop}' >&2; exit 1 ;;
+esac

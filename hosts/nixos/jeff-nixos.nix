@@ -109,6 +109,18 @@ in
       libguestfs
       # ansel # darktable
       amdgpu_top
+      # Run Hub and the editors it installs inside Nixpkgs' FHS environment.
+      unityhub
+      (writeShellScriptBin "unity-editor" ''
+        editor="''${UNITY_EDITOR_PATH:-$HOME/Unity/Hub/Editor/6000.3.24f1/Editor/Unity}"
+        if [[ ! -x "$editor" ]]; then
+          echo "Unity Editor not found at $editor" >&2
+          echo "Install it with: unityhub --headless install --version 6000.3.24f1" >&2
+          echo "Or set UNITY_EDITOR_PATH to another installed Editor/Unity binary." >&2
+          exit 1
+        fi
+        exec ${unityhub.fhsEnv}/bin/unityhub-fhs-env "$editor" "$@"
+      '')
     ];
 
     environment.etc = {
