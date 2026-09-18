@@ -21,9 +21,15 @@ let
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
 in
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+    # Copied from relay: nix/shared-cpu-limit.nix + contrib/relay-cpu-group.py
+    ../../modules/linux/services/_relay/nix/shared-cpu-limit.nix
+  ];
 
   config = {
+    # Shared CPU quota for nix-daemon + Relay subprocesses (relay.cpu/share-nix-daemon-cpu)
+    relay.sharedCpuLimit.users = [ config.user.name ];
     nixpkgs.config.rocmSupport = true;
     host.optimize = true;
     modules = {
