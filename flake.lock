@@ -101,39 +101,39 @@
       "flake": false,
       "locked": {
         "lastModified": 499162500,
-        "narHash": "sha256-6ASh3yOf8muqbkCNoHyPdO/3u53N69izLlVOmy5nN/E=",
+        "narHash": "sha256-mR7bTACsjt6ZIcFESixc1aSm0zhNo26bReyVBunfEtA=",
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.276.tgz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.276.tgz"
       }
     },
     "claude-code-src-linux-arm64": {
       "flake": false,
       "locked": {
         "lastModified": 499162500,
-        "narHash": "sha256-Xc7iLcpfXUP/DsjOmwMHrZyImrY7mArqJNDfhj4cfKg=",
+        "narHash": "sha256-UNpHs1NxpTpehLEKLo9GAshZ522K86DPZ3UX7D3MdQw=",
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.276.tgz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.276.tgz"
       }
     },
     "claude-code-src-linux-x64": {
       "flake": false,
       "locked": {
         "lastModified": 499162500,
-        "narHash": "sha256-W0yHl23ywxO0iXNn2NzbAxw4DbEabCCg6BlZuFNLpVE=",
+        "narHash": "sha256-XPmMGcuZ5bnE2xNS88fG2au4sfqFtDxyEShQRnaD4uc=",
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.276.tgz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.274.tgz"
+        "url": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.276.tgz"
       }
     },
     "darwin": {
