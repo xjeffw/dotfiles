@@ -65,6 +65,7 @@ in
               expect
               gnugrep
               gnused
+              helix
               inetutils
               jq
               pkgs-stable.less
