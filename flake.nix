@@ -22,15 +22,15 @@
     # Official npm release artifacts, pinned independently of nixpkgs by ./update-claude-code.sh.
     # Upstream distributes native binaries; these are package sources, not application source code.
     claude-code-src-linux-x64 = {
-      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.277.tgz";
+      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.278.tgz";
       flake = false;
     };
     claude-code-src-linux-arm64 = {
-      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.277.tgz";
+      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-arm64/-/claude-code-linux-arm64-2.1.278.tgz";
       flake = false;
     };
     claude-code-src-darwin-arm64 = {
-      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.277.tgz";
+      url = "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-arm64/-/claude-code-darwin-arm64-2.1.278.tgz";
       flake = false;
     };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
