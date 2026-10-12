@@ -230,7 +230,6 @@ in {
             catppuccin-papirus-folders
             catppuccin-sddm-corners
             adwaita-icon-theme
-            gnome-icon-theme
           ] ++ optionals modules.desktop.qt
           [ plasma5Packages.qtstyleplugin-kvantum ];
         catppuccin-mocha = (pkgs.catppuccin-gtk.override {

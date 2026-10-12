@@ -57,7 +57,6 @@ in
         ++ optionals (!host.minimal) [
           cmake
           nixd
-          openai
           reg
           regctl
           skopeo

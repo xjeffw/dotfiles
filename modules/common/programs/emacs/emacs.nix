@@ -54,7 +54,7 @@ let
             configureFlags = (old.configureFlags or [ ]) ++ [ "LDFLAGS=-headerpad_max_install_names" ];
           })
         else if modules.desktop.enable then
-          pkgs.emacs30-pgtk # from nixpkgs
+          pkgs.emacs-pgtk # from nixpkgs
           # pkgs.emacs-git-pgtk # from emacs-overlay
         else
           pkgs.emacs30-nox
@@ -116,8 +116,6 @@ in
           (aspellWithDicts (
             dicts: with dicts; [
               en
-              en-computers
-              en-science
             ]
           ))
         ];

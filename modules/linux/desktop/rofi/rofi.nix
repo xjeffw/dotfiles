@@ -20,7 +20,7 @@ in {
 
       home.packages = with pkgs; [
         (rofi.override { plugins = [ rofi-top ]; })
-        rofi-pass-wayland
+        (pkgs-stable.rofi-pass-wayland)
       ];
     };
   };
