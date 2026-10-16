@@ -54,6 +54,8 @@
     hyprlock.url = "github:hyprwm/hyprlock";
     antigravity-nix.url = "github:jacopone/antigravity-nix";
     antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
+    delta.url = "github:zed-industries/delta-nix";
+    delta.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

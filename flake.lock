@@ -156,6 +156,26 @@
         "type": "github"
       }
     },
+    "delta": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792021230,
+        "narHash": "sha256-qT0ZdH+i4cK/4pMb+SxMneyPbOSYkwdp5QF8kkQrNBQ=",
+        "owner": "zed-industries",
+        "repo": "delta-nix",
+        "rev": "6091b4eb4a0d41ab2b23f039b991683a6181535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zed-industries",
+        "repo": "delta-nix",
+        "type": "github"
+      }
+    },
     "emacs-overlay": {
       "inputs": {
         "nixpkgs": [
@@ -1088,6 +1108,7 @@
         "claude-code-src-linux-arm64": "claude-code-src-linux-arm64",
         "claude-code-src-linux-x64": "claude-code-src-linux-x64",
         "darwin": "darwin",
+        "delta": "delta",
         "emacs-overlay": "emacs-overlay",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",
