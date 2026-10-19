@@ -106,10 +106,11 @@ blur {
     offset 1
 }
 
-// hyprshell notification popups request blur and draw their own shadow so both
-// can follow their fade; blur the windows behind them, not just the wallpaper.
+// hyprshell notification popups and the volume display request blur and draw
+// their own shadow so both can follow their fade; blur the windows behind them,
+// not just the wallpaper.
 layer-rule {
-    match namespace="^hyprshell-notification$"
+    match namespace="^hyprshell-(notification|osd)$"
     background-effect {
         xray false
     }
@@ -197,10 +198,10 @@ binds {
     // rofi commands
     Super+S repeat=false { spawn "browser-search"; }
 
-    // volume
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "volumectl" "-d" "+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "volumectl" "-d" "-"; }
-    XF86AudioMute allow-when-locked=true repeat=false { spawn "volumectl" "-d" "%"; }
+    // volume, shown by hyprshell's volume display
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "hyprshell" "ipc" "call" "volume" "up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "hyprshell" "ipc" "call" "volume" "down"; }
+    XF86AudioMute allow-when-locked=true repeat=false { spawn "hyprshell" "ipc" "call" "volume" "toggleMute"; }
 
     // brightness
     Super+Equal { spawn "change-brightness" "3" "+" "2"; }

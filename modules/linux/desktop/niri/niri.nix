@@ -54,10 +54,6 @@ in
           };
         };
 
-        systemd.user.services.avizo.Install.WantedBy = mkIf modules.desktop.avizo.enable [
-          "niri-session.target"
-        ];
-
         systemd.user.services.lxqt-policykit-agent.Install.WantedBy = mkIf modules.desktop.enable [
           "niri-session.target"
         ];

@@ -77,6 +77,17 @@ function update_notify() {
   notify-send.sh "${args[@]}"
 }
 
+# Shows the new level in hyprshell's on-screen display when it's running, or
+# as a notification otherwise. `hyprshell ipc call` exits successfully even
+# when the call fails, so check for the function's `true` result instead.
+function show_brightness() {
+  local value="$1"
+  if [ "$(hyprshell ipc call brightness changed "$model" "$value" 2>/dev/null)" == "true" ]; then
+    return 0
+  fi
+  update_notify 1000 "$value% / 100%" "$value"
+}
+
 function current_brightness() {
   if [ -f "$value_file" ]; then
     cat "$value_file"
@@ -121,7 +132,7 @@ function run_display() {
     BRIGHTNESS=$(get-brightness "$bus")
   fi
 
-  update_notify 1000 "$BRIGHTNESS% / 100%" "$BRIGHTNESS"
+  show_brightness "$BRIGHTNESS"
 }
 
 if [ "$execute" == "1" ]; then

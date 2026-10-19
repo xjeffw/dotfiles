@@ -71,10 +71,6 @@ in
           "hyprland-session.target"
         ];
 
-        systemd.user.services.avizo.Install.WantedBy = mkIf modules.desktop.avizo.enable [
-          "hyprland-session.target"
-        ];
-
         systemd.user.services.lxqt-policykit-agent.Install.WantedBy = mkIf modules.desktop.enable [
           "hyprland-session.target"
         ];
