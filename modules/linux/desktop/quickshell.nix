@@ -11,7 +11,8 @@ let
   inherit (config) user modules;
   cfg = modules.desktop.quickshell;
   hyprshell = inputs.hyprshell.packages.${pkgs.stdenv.hostPlatform.system}.hyprshell;
-  waylandDesktopEnabled = modules.desktop.hyprland.enable || modules.desktop.sway.enable;
+  waylandDesktopEnabled =
+    modules.desktop.hyprland.enable || modules.desktop.niri.enable || modules.desktop.sway.enable;
 in
 {
   options.modules.desktop.quickshell.enable = mkBoolOpt true;
@@ -27,6 +28,7 @@ in
         };
         Install.WantedBy =
           optionals modules.desktop.hyprland.enable [ "hyprland-session.target" ]
+          ++ optionals modules.desktop.niri.enable [ "niri-session.target" ]
           ++ optionals modules.desktop.sway.enable [ "sway-session.target" ];
         Service = {
           Type = "simple";

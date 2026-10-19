@@ -1,0 +1,235 @@
+// Translated from ../hyprland/hyprland.conf.
+// Reference: https://niri-wm.github.io/niri/Configuration:-Introduction
+// Check changes with `niri validate`; niri reloads this file automatically.
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+            options "ctrl:nocaps"
+        }
+
+        repeat-delay 200
+        repeat-rate 60
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        drag true
+        drag-lock
+        scroll-factor 0.5
+    }
+
+    // Don't scroll the view just because the pointer crossed a partly visible column.
+    focus-follows-mouse max-scroll-amount="0%"
+
+    // Mod is only used implicitly: Mod+left/right drag moves/resizes windows.
+    mod-key "Alt"
+}
+
+output "HDMI-A-1" {
+    mode "3840x2160"
+    scale 1.6667
+    position x=0 y=0
+}
+
+output "DP-1" {
+    mode "3840x2160"
+    scale 1.6667
+    position x=2304 y=0
+}
+
+output "eDP-1" {
+    scale 1.75
+}
+
+layout {
+    gaps 10
+
+    center-focused-column "never"
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.5; }
+
+    // Thin green-to-teal ring around the focused window only (Catppuccin Mocha).
+    focus-ring {
+        width 3
+        active-gradient from="#a6e3a1" to="#94e2d5" angle=45
+        inactive-color "#45475a"
+    }
+
+    border {
+        off
+    }
+
+    shadow {
+        on
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
+    }
+}
+
+spawn-sh-at-startup "systemctl --user start niri-session.target && systemctl --user restart emacs.service"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+// Show the swaybg wallpaper behind workspaces in the overview.
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
+
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+    // Ignore maximize requests when windows open.
+    open-maximized-to-edges false
+}
+
+// Use float for these programs.
+window-rule {
+    match app-id="[Mm]pv"
+    match app-id="[Ee]og"
+    match app-id="[Pp]avucontrol"
+    match app-id="[Nn]autilus"
+    match app-id="[Ss]team"
+    match app-id="themechanger"
+    match app-id="gedit"
+    match app-id="lich.rbw"
+    open-floating true
+}
+
+window-rule {
+    match app-id="looking-glass-client"
+    open-fullscreen true
+}
+
+// Built-in Alt+Tab window switcher. Listed explicitly because the defaults
+// also bind Mod+Tab, which duplicates Alt+Tab with mod-key "Alt".
+recent-windows {
+    binds {
+        Alt+Tab         { next-window; }
+        Alt+Shift+Tab   { previous-window; }
+        Alt+Grave       { next-window     filter="app-id"; }
+        Alt+Shift+Grave { previous-window filter="app-id"; }
+    }
+}
+
+binds {
+    Super+Shift+Slash { show-hotkey-overlay; }
+    Super+O repeat=false { toggle-overview; }
+    // Escape hatch for apps (VMs, looking-glass) that inhibit compositor shortcuts.
+    Super+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+    Ctrl+Alt+Q repeat=false { close-window; }
+    Super+Shift+Ctrl+Q { quit skip-confirmation=true; }
+    Ctrl+Alt+L repeat=false { spawn "loginctl" "lock-session"; }
+    Alt+F repeat=false { fullscreen-window; }
+    Alt+Shift+Space repeat=false { toggle-window-floating; }
+    Alt+P repeat=false { spawn "rofi" "-show" "run"; }
+
+    // column sizing (no Hyprland equivalent)
+    Super+R { switch-preset-column-width; }
+    Super+Shift+R { switch-preset-column-width-back; }
+    Super+F { maximize-column; }
+
+    // launch apps
+    Alt+Return repeat=false { spawn "kitty" "-1"; }
+    Ctrl+Alt+Return repeat=false { spawn "rly-gui"; }
+    Ctrl+Alt+F repeat=false { spawn "nautilus"; }
+    Ctrl+Alt+E repeat=false { spawn "emacsclient" "-c"; }
+    Ctrl+Alt+P repeat=false { spawn-sh "killall pavucontrol; pavucontrol"; }
+    Alt+Shift+P repeat=false { spawn "rofi-pass"; }
+    Super+Shift+S repeat=false { spawn "rofi-systemd"; }
+
+    // rofi commands
+    Super+S repeat=false { spawn "browser-search"; }
+
+    // volume
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "volumectl" "-d" "+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "volumectl" "-d" "-"; }
+    XF86AudioMute allow-when-locked=true repeat=false { spawn "volumectl" "-d" "%"; }
+
+    // brightness
+    Super+Equal { spawn "change-brightness" "3" "+" "2"; }
+    Super+Minus { spawn "change-brightness" "3" "-" "2"; }
+    Super+Grave repeat=false { spawn "change-brightness" "3" "96"; }
+    Super+Backslash repeat=false { spawn "change-brightness" "3" "80"; }
+    Super+Ctrl+Equal { spawn "change-brightness" "4" "+" "2"; }
+    Super+Ctrl+Minus { spawn "change-brightness" "4" "-" "2"; }
+    Super+Ctrl+Grave repeat=false { spawn "change-brightness" "4" "96"; }
+    Super+Ctrl+Backslash repeat=false { spawn "change-brightness" "4" "88"; }
+
+    XF86MonBrightnessUp allow-when-locked=true { spawn "lightctl" "-d" "+" "5"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "lightctl" "-d" "-" "5"; }
+
+    // display output
+    Super+Ctrl+1 repeat=false { spawn "disp" "-s" "linux"; }
+    Super+Ctrl+2 repeat=false { spawn "disp" "-s" "windows"; }
+
+    // screenshots: copied to the clipboard and saved to ~/Pictures/Screenshots
+    Super+Ctrl+S repeat=false { screenshot-window; }
+    Super+Ctrl+Shift+S repeat=false { screenshot; }
+
+    // media controls
+    Super+Ctrl+Up repeat=false { spawn "hyprshell" "request" "playPause"; }
+    Super+Ctrl+Down repeat=false { spawn "hyprshell" "request" "selectNextPlayer"; }
+    Super+Ctrl+Left repeat=false { spawn "hyprshell" "request" "previousTrack"; }
+    Super+Ctrl+Right repeat=false { spawn "hyprshell" "request" "nextTrack"; }
+    Super+Ctrl+Shift+Left { spawn "hyprshell" "request" "seekDelta" "-10"; }
+    Super+Ctrl+Shift+Right { spawn "hyprshell" "request" "seekDelta" "10"; }
+
+    // move focus
+    Alt+Left { focus-column-or-monitor-left; }
+    Alt+Right { focus-column-or-monitor-right; }
+    Alt+Up { focus-window-up; }
+    Alt+Down { focus-window-down; }
+    Ctrl+Alt+Period { focus-floating; }
+    Ctrl+Alt+Shift+Period { focus-tiling; }
+
+    // adjacent workspaces (niri stacks workspaces vertically per monitor)
+    Super+Left { focus-workspace-up; }
+    Super+Right { focus-workspace-down; }
+    Super+Up { focus-workspace-up; }
+    Super+Down { focus-workspace-down; }
+    Super+Shift+Left { move-column-to-workspace-up; }
+    Super+Shift+Right { move-column-to-workspace-down; }
+    Super+Shift+Up { move-column-to-workspace-up; }
+    Super+Shift+Down { move-column-to-workspace-down; }
+    Alt+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Alt+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
+
+    // swap with neighbors
+    Alt+Shift+Left { move-column-left-or-to-monitor-left; }
+    Alt+Shift+Right { move-column-right-or-to-monitor-right; }
+    Alt+Shift+Up { move-window-up; }
+    Alt+Shift+Down { move-window-down; }
+
+    // move into or out of neighboring columns (like movewindoworgroup)
+    Alt+Shift+Ctrl+Left { consume-or-expel-window-left; }
+    Alt+Shift+Ctrl+Right { consume-or-expel-window-right; }
+    Alt+Shift+Ctrl+Up { move-window-up-or-to-workspace-up; }
+    Alt+Shift+Ctrl+Down { move-window-down-or-to-workspace-down; }
+
+    // monitors
+    Super+Return { focus-monitor-next; }
+    Super+Space { move-workspace-to-monitor-next; }
+
+    // tabbed columns (like window groups)
+    Super+Period { toggle-column-tabbed-display; }
+    Super+Semicolon { focus-window-up; }
+    Super+Apostrophe { focus-window-down; }
+}
+
+// Host-specific settings from modules.desktop.niri.extraConf.
+include "extra.kdl"

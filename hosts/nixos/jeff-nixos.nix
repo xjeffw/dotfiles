@@ -46,6 +46,13 @@ in
       '';
       desktop.hyprland.flake = false;
       desktop.hyprland.hyprlockFlake = false;
+      desktop.niri.extraConf = ''
+        input {
+            mouse {
+                accel-speed -0.5
+            }
+        }
+      '';
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       programs.mpv.extraConf = ''
         vo=gpu

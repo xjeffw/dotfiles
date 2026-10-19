@@ -28,6 +28,15 @@ in
             kb_options = ctrl:nocaps,altwin:swap_alt_win
         }
       '';
+      desktop.niri.extraConf = ''
+        input {
+            keyboard {
+                xkb {
+                    options "ctrl:nocaps,altwin:swap_alt_win"
+                }
+            }
+        }
+      '';
       programs.firefox.profilePath = "v5o56gix.default-1722656138151";
       services.protonmail.enable = true;
       services.protonvpn = {
