@@ -48,6 +48,10 @@ in
       desktop.hyprland.hyprlockFlake = false;
       desktop.niri.extraConf = ''
         input {
+            // niri suspends on the power key by default, and an accidental
+            // keyboard combo sends one. Leave it to logind (HandlePowerKey=ignore).
+            disable-power-key-handling
+
             mouse {
                 accel-speed -0.5
             }
@@ -243,6 +247,10 @@ in
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
       "mitigations=off"
+      # The board's ACPI thermal zone (acpitz) is bogus: a fixed 16.8C reading
+      # with a 20.8C critical trip, which it crosses after resume from suspend
+      # and forces a shutdown. Real CPU/GPU temps come from k10temp/amdgpu.
+      "thermal.crt=-1"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
