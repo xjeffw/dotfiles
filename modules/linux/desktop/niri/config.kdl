@@ -106,6 +106,15 @@ blur {
     offset 1
 }
 
+// hyprshell notification popups request blur and draw their own shadow so both
+// can follow their fade; blur the windows behind them, not just the wallpaper.
+layer-rule {
+    match namespace="^hyprshell-notification$"
+    background-effect {
+        xray false
+    }
+}
+
 window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
@@ -255,6 +264,7 @@ binds {
     // monitors
     Super+Return { focus-monitor-next; }
     Super+Space { move-workspace-to-monitor-next; }
+    Super+Shift+Return { move-window-to-monitor-next; }
 
     // next wallpaper for the focused workspace
     Super+W { spawn "niri-workspace-wallpapers.sh" "cycle"; }

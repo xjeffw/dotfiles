@@ -43,6 +43,11 @@
     astal.inputs.nixpkgs.follows = "nixpkgs";
     hyprshell.url = "github:xjeffw/hyprshell";
     hyprshell.inputs.nixpkgs.follows = "nixpkgs";
+    # niri fork with wp_alpha_modifier_v1 support (see modules/linux/desktop/niri).
+    niri-src = {
+      url = "github:xjeffw/niri/alpha-modifier";
+      flake = false;
+    };
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     nil-server.url = "github:oxalica/nil";

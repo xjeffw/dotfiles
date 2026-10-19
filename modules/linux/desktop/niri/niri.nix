@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 with lib;
@@ -10,6 +11,10 @@ let
   inherit (config) user host modules;
   cfg = modules.desktop.niri;
   pwd = "${host.config-dir}/modules/linux/desktop/niri";
+  # Fork adding wp_alpha_modifier_v1, which also fades blur behind a surface
+  # (used by hyprshell's notification fade). Based on the release in nixpkgs,
+  # so its cargo dependencies are unchanged.
+  niri = pkgs.niri.overrideAttrs { src = inputs.niri-src; };
 in
 {
   options.modules.desktop.niri = {
@@ -19,6 +24,7 @@ in
 
   config = mkIf cfg.enable {
     programs.niri.enable = true;
+    programs.niri.package = niri;
     # programs.niri enables gnome-keyring by default, which also swaps the
     # ssh-agent socket for gcr-ssh-agent; keep the existing setup.
     services.gnome.gnome-keyring.enable = mkOverride 999 false;
@@ -111,8 +117,8 @@ in
                     coreutils
                     findutils
                     jq
-                    niri
                   ]
+                  ++ [ niri ]
                 )
               }"
             ];

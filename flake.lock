@@ -681,15 +681,16 @@
           "nixpkgs"
         ],
         "nixpkgs-stable": "nixpkgs-stable",
+        "quickshell-src": "quickshell-src",
         "systems": "systems_5",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792377802,
-        "narHash": "sha256-/uBh+E459zrj7BuYM6mdQCdpQIalFTN3hZG6VAaefr4=",
+        "lastModified": 1792439871,
+        "narHash": "sha256-4M3f1aHYoHevErwnJb0ukKr8PQvqYt2jSobBzTIc31w=",
         "owner": "xjeffw",
         "repo": "hyprshell",
-        "rev": "cc62874d1277ab2deee9b8eb5057ec44724ee6ec",
+        "rev": "f295f9a48709028524be1efab76ad887a40cd44f",
         "type": "github"
       },
       "original": {
@@ -899,6 +900,23 @@
         "type": "github"
       }
     },
+    "niri-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792439499,
+        "narHash": "sha256-sCQ5fABTVcHqCZ17bHJTCQsXXfPRjqqpydcI0OGWAQM=",
+        "owner": "xjeffw",
+        "repo": "niri",
+        "rev": "cee4369a1e207c705bbea9824b04664e3ef63bca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xjeffw",
+        "ref": "alpha-modifier",
+        "repo": "niri",
+        "type": "github"
+      }
+    },
     "nixos-apple-silicon": {
       "inputs": {
         "flake-compat": "flake-compat_4",
@@ -1099,6 +1117,23 @@
         "type": "github"
       }
     },
+    "quickshell-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792439501,
+        "narHash": "sha256-Tr3tBRyjY3xdF8fyOY+sc+lsQKC6bvVpeGXRWgxpLvA=",
+        "owner": "xjeffw",
+        "repo": "quickshell",
+        "rev": "a23803f381768ccb0ddf0508b3ba08b88360f61f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xjeffw",
+        "ref": "alpha-modifier",
+        "repo": "quickshell",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "ags": "ags",
@@ -1118,6 +1153,7 @@
         "hyprlock": "hyprlock",
         "hyprshell": "hyprshell",
         "nil-server": "nil-server",
+        "niri-src": "niri-src",
         "nixos-apple-silicon": "nixos-apple-silicon",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-2311": "nixpkgs-2311",
