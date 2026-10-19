@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Private headless Sway session, following ~/code/relay/headless/gui.sh.
+# Private headless Sway session, following ~/code/flux/headless/gui.sh.
 # Usage: unity-headless start [command args...]
 #        unity-headless {run command args...|status|shot [path]|stop}
 set -euo pipefail

@@ -26,7 +26,7 @@ select a different version or installation directory.
 ## Headless GUI verification
 
 `bin/unity-headless` follows the private headless Sway approach in
-`~/code/relay/headless/gui.sh`, with Xwayland enabled for Unity Editor.
+`~/code/flux/headless/gui.sh`, with Xwayland enabled for Unity Editor.
 It uses the real GPU and a private session bus and display; the default state
 directory is `/tmp/unity-headless-$(id -u)`. It needs the host's `sway`,
 `swaymsg`, `jq`, `dbus-run-session`, and `grim` commands.

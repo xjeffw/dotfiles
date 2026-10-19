@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -I
-"""Root-installed, sudo-only bridge into Relay's delegated system cgroup.
+"""Root-installed, sudo-only bridge into Flux's delegated system cgroup.
 
-Install this file as relay-cpu-group; see cpu-limits.md. Never run a copy
+Install this file as flux-cpu-group; see cpu-limits.md. Never run a copy
 writable by the invoking user as root. This helper does not execute user
 commands or accept unit names, arbitrary files, or configuration paths.
 """
@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 CGROUP = Path("/sys/fs/cgroup")
-SLICE = "relaywork.slice"
+SLICE = "fluxwork.slice"
 
 
 def systemctl(*args):
@@ -44,16 +44,16 @@ def unit_path(unit):
 
 def worker_path(uid):
     # Fixed system service, never a path chosen by an unprivileged caller.
-    path = CGROUP / SLICE / f"relay-workers@{uid}.service"
+    path = CGROUP / SLICE / f"flux-workers@{uid}.service"
     if path.stat().st_uid != uid:
-        raise ValueError("Relay worker service must delegate its cgroup to the invoking user")
+        raise ValueError("Flux worker service must delegate its cgroup to the invoking user")
     return path
 
 
 def checked_destination(root, destination):
     path = Path(destination).resolve(strict=True)
     if path == root or not path.is_relative_to(root):
-        raise ValueError("destination must be a child of the delegated Relay worker cgroup")
+        raise ValueError("destination must be a child of the delegated Flux worker cgroup")
     # cgroupfs cannot contain symlinks or ordinary user-created files. Checking
     # the mount/device also excludes a substituted path on another filesystem.
     if path.stat().st_dev != CGROUP.stat().st_dev:
@@ -106,23 +106,23 @@ def main(args):
         shared = unit_path(SLICE)
         if not unit_path("nix-daemon.service").is_relative_to(shared):
             raise ValueError(
-                "nix-daemon.service must be configured with Slice=relaywork.slice and restarted"
+                "nix-daemon.service must be configured with Slice=fluxwork.slice and restarted"
             )
-        systemctl("start", f"relay-workers@{uid}.service")
+        systemctl("start", f"flux-workers@{uid}.service")
         root = worker_path(uid)
-        if unit_path(f"relay-workers@{uid}.service") != root:
-            raise ValueError("Relay worker service must be inside relaywork.slice")
+        if unit_path(f"flux-workers@{uid}.service") != root:
+            raise ValueError("Flux worker service must be inside fluxwork.slice")
         systemctl("set-property", "--runtime", SLICE, f"CPUQuota={cores * 100:g}%")
         print(root)
     elif len(args) == 3 and args[0] == "attach":
         attach(worker_path(uid), args[1], int(args[2]), uid)
     else:
-        raise ValueError("usage: relay-cpu-group prepare CORES | attach CGROUP PID")
+        raise ValueError("usage: flux-cpu-group prepare CORES | attach CGROUP PID")
 
 
 if __name__ == "__main__":
     try:
         main(sys.argv[1:])
     except (OSError, ValueError, StopIteration, subprocess.CalledProcessError) as error:
-        print(f"relay-cpu-group: {error}", file=sys.stderr)
+        print(f"flux-cpu-group: {error}", file=sys.stderr)
         sys.exit(1)
