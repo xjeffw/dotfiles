@@ -47,6 +47,10 @@ output "eDP-1" {
 layout {
     gaps 6
 
+    // Let the wallpaper in the backdrop (see the layer-rule below) show
+    // through; workspaces are opaque by default.
+    background-color "transparent"
+
     center-focused-column "never"
 
     preset-column-widths {
@@ -83,10 +87,23 @@ hotkey-overlay {
     skip-at-startup
 }
 
-// Show the awww wallpaper behind workspaces in the overview.
+// Keep the awww wallpaper stationary behind workspaces (and in the overview)
+// instead of sliding with them; niri-workspace-wallpapers.sh changes it.
 layer-rule {
     match namespace="^awww-daemon"
     place-within-backdrop true
+}
+
+overview {
+    // Shadows look odd around transparent workspaces.
+    workspace-shadow {
+        off
+    }
+}
+
+blur {
+    passes 3
+    offset 1
 }
 
 window-rule {
@@ -95,6 +112,10 @@ window-rule {
     // Draw the focus ring only around the edge, not as a solid fill behind the
     // window, which tints translucent windows (e.g. kitty background_opacity).
     draw-border-with-background false
+    // Blur the wallpaper behind translucent windows; opaque ones are unaffected.
+    background-effect {
+        blur true
+    }
     // Ignore maximize requests when windows open.
     open-maximized-to-edges false
 }
@@ -234,6 +255,9 @@ binds {
     // monitors
     Super+Return { focus-monitor-next; }
     Super+Space { move-workspace-to-monitor-next; }
+
+    // next wallpaper for the focused workspace
+    Super+W { spawn "niri-workspace-wallpapers.sh" "cycle"; }
 
     // toggle stacking the next new window below the focused one
     Alt+V repeat=false { spawn "niri-stack-next.sh"; }

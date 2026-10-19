@@ -685,11 +685,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792371254,
-        "narHash": "sha256-GTfbid2rvIsnW9EwthQZrAETPKEiaqOcMMZA90t7608=",
+        "lastModified": 1792375436,
+        "narHash": "sha256-iabWnIrJl/wAUcsQI0dBlid+qJzCVeyHKsglX+tZgbo=",
         "owner": "xjeffw",
         "repo": "hyprshell",
-        "rev": "11a7f4741185a0310d6c7d3e5ee037a443f95d2f",
+        "rev": "3a61924748481002f7511feba4d2049f98166a95",
         "type": "github"
       },
       "original": {

@@ -10,7 +10,16 @@ with lib.my;
 let
   inherit (config) user modules;
   cfg = modules.desktop.quickshell;
-  hyprshell = inputs.hyprshell.packages.${pkgs.stdenv.hostPlatform.system}.hyprshell;
+  hyprshellPkg = inputs.hyprshell.packages.${pkgs.stdenv.hostPlatform.system}.hyprshell;
+  # Run the bar from the ~/code/hyprshell checkout when there is one, so QML
+  # edits take effect without a rebuild (quickshell reloads on file changes).
+  hyprshell = pkgs.writeShellScriptBin "hyprshell" ''
+    checkout="$HOME/code/hyprshell/quickshell"
+    if [[ -z ''${HYPRSHELL_CONFIG_DIR:-} && -f $checkout/shell.qml ]]; then
+      export HYPRSHELL_CONFIG_DIR=$checkout
+    fi
+    exec ${hyprshellPkg}/bin/hyprshell "$@"
+  '';
   waylandDesktopEnabled =
     modules.desktop.hyprland.enable || modules.desktop.niri.enable || modules.desktop.sway.enable;
 in
