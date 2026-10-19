@@ -24,9 +24,9 @@ in
     services.gnome.gnome-keyring.enable = mkOverride 999 false;
 
     environment.systemPackages = with pkgs; [
+      awww
       hypridle
       hyprlock
-      swaybg
       xwayland-satellite
     ];
 
@@ -73,9 +73,9 @@ in
           };
         };
 
-        systemd.user.services.niri-swaybg = {
+        systemd.user.services.niri-awww = {
           Unit = {
-            Description = "Wallpaper service for niri";
+            Description = "Wallpaper daemon for niri";
             PartOf = [ "graphical-session.target" ];
           };
           Install = {
@@ -83,12 +83,40 @@ in
           };
           Service = {
             Type = "simple";
-            # same wallpapers as hyprpaper.conf
-            ExecStart = concatStringsSep " " [
-              "${pkgs.swaybg}/bin/swaybg"
-              "-o HDMI-A-1 -m fill -i %h/.config/hypr/wallpapers/code-monitor-closeup.png"
-              "-o '*' -m fill -i %h/.config/hypr/wallpapers/wall2.png"
+            ExecStart = "${pkgs.awww}/bin/awww-daemon";
+            Restart = "always";
+            RestartSec = 5;
+          };
+        };
+
+        systemd.user.services.niri-wallpapers = {
+          Unit = {
+            Description = "Per-workspace wallpapers for niri";
+            PartOf = [ "graphical-session.target" ];
+            BindsTo = [ "niri-awww.service" ];
+            After = [ "niri-awww.service" ];
+          };
+          Install = {
+            WantedBy = [ "niri-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            Environment = [
+              "PATH=${
+                makeBinPath (
+                  with pkgs;
+                  [
+                    awww
+                    bash
+                    coreutils
+                    findutils
+                    jq
+                    niri
+                  ]
+                )
+              }"
             ];
+            ExecStart = "%h/bin/niri-workspace-wallpapers.sh";
             Restart = "always";
             RestartSec = 5;
           };

@@ -45,7 +45,7 @@ output "eDP-1" {
 }
 
 layout {
-    gaps 10
+    gaps 6
 
     center-focused-column "never"
 
@@ -59,7 +59,7 @@ layout {
 
     // Thin green-to-teal ring around the focused window only (Catppuccin Mocha).
     focus-ring {
-        width 3
+        width 2
         active-gradient from="#a6e3a1" to="#94e2d5" angle=45
         inactive-color "#45475a"
     }
@@ -83,17 +83,29 @@ hotkey-overlay {
     skip-at-startup
 }
 
-// Show the swaybg wallpaper behind workspaces in the overview.
+// Show the awww wallpaper behind workspaces in the overview.
 layer-rule {
-    match namespace="^wallpaper$"
+    match namespace="^awww-daemon"
     place-within-backdrop true
 }
 
 window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
+    // Draw the focus ring only around the edge, not as a solid fill behind the
+    // window, which tints translucent windows (e.g. kitty background_opacity).
+    draw-border-with-background false
     // Ignore maximize requests when windows open.
     open-maximized-to-edges false
+}
+
+// Open maximized to the screen edges (no gaps or focus ring). Unmaximizing
+// leaves a full-width column.
+window-rule {
+    match app-id="^firefox$"
+    match app-id="^relay$"
+    open-maximized-to-edges true
+    default-column-width { proportion 1.0; }
 }
 
 // Use float for these programs.
@@ -177,9 +189,10 @@ binds {
     Super+Ctrl+1 repeat=false { spawn "disp" "-s" "linux"; }
     Super+Ctrl+2 repeat=false { spawn "disp" "-s" "windows"; }
 
-    // screenshots: copied to the clipboard and saved to ~/Pictures/Screenshots
-    Super+Ctrl+S repeat=false { screenshot-window; }
-    Super+Ctrl+Shift+S repeat=false { screenshot; }
+    // screenshots: saved to ~/Pictures/Screenshots with the file path copied
+    Super+Ctrl+S repeat=false { spawn "niri-screenshot-copy-path.sh" "window"; }
+    Super+Ctrl+Shift+S repeat=false { spawn "niri-screenshot-copy-path.sh" "region"; }
+    Super+Ctrl+Alt+S repeat=false { spawn "niri-screenshot-copy-path.sh" "screen"; }
 
     // media controls
     Super+Ctrl+Up repeat=false { spawn "hyprshell" "request" "playPause"; }
@@ -192,16 +205,13 @@ binds {
     // move focus
     Alt+Left { focus-column-or-monitor-left; }
     Alt+Right { focus-column-or-monitor-right; }
-    Alt+Up { focus-window-up; }
-    Alt+Down { focus-window-down; }
+    // within the column, then on to the adjacent workspace at the top/bottom
+    Alt+Up { focus-window-or-workspace-up; }
+    Alt+Down { focus-window-or-workspace-down; }
     Ctrl+Alt+Period { focus-floating; }
     Ctrl+Alt+Shift+Period { focus-tiling; }
 
     // adjacent workspaces (niri stacks workspaces vertically per monitor)
-    Super+Left { focus-workspace-up; }
-    Super+Right { focus-workspace-down; }
-    Super+Up { focus-workspace-up; }
-    Super+Down { focus-workspace-down; }
     Super+Shift+Left { move-column-to-workspace-up; }
     Super+Shift+Right { move-column-to-workspace-down; }
     Super+Shift+Up { move-column-to-workspace-up; }
@@ -224,6 +234,9 @@ binds {
     // monitors
     Super+Return { focus-monitor-next; }
     Super+Space { move-workspace-to-monitor-next; }
+
+    // toggle stacking the next new window below the focused one
+    Alt+V repeat=false { spawn "niri-stack-next.sh"; }
 
     // tabbed columns (like window groups)
     Super+Period { toggle-column-tabbed-display; }
