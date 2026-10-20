@@ -165,12 +165,14 @@ recent-windows {
         Alt+Shift+Tab   { previous-window; }
         Alt+Grave       { next-window     filter="app-id"; }
         Alt+Shift+Grave { previous-window filter="app-id"; }
+        Super+Down      { next-window     scope="workspace"; }
     }
 }
 
 binds {
     Super+Shift+Slash { show-hotkey-overlay; }
     Super+O repeat=false { toggle-overview; }
+    Super+Up repeat=false { toggle-overview; }
     // Escape hatch for apps (VMs, looking-glass) that inhibit compositor shortcuts.
     Super+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
