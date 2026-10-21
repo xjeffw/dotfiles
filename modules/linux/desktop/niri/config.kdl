@@ -102,8 +102,8 @@ overview {
 }
 
 blur {
-    passes 4
-    offset 1
+    passes 3
+    offset 3
 }
 
 // hyprshell notification popups and the volume display request blur and draw
