@@ -15,6 +15,19 @@
           old.installPhase;
       });
     };
+  # greg imports pkg_resources, which current setuptools no longer provides.
+  greg = final: prev: {
+    greg = prev.greg.overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        for f in greg/classes.py greg/aux_functions.py; do
+          substituteInPlace $f \
+            --replace-fail "from pkg_resources import resource_filename" "" \
+            --replace-fail "resource_filename(__name__, 'data/greg.conf')" \
+                           "os.path.join(os.path.dirname(__file__), 'data', 'greg.conf')"
+        done
+      '';
+    });
+  };
   fastStdenv = final: prev: {
     final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
   };
