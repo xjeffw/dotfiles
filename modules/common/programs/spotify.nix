@@ -17,7 +17,7 @@ in {
     home-manager.users.${user.name} = {
       imports = [ inputs.spicetify-nix.homeManagerModules.default ];
 
-      home.packages = with pkgs; [ spotify-player ncspot sptlrx ];
+      home.packages = with pkgs; [ spotify-player spotatui ncspot sptlrx ];
 
       # spotify-player requires a Spotify Premium account.
       # If you get "No playback found":

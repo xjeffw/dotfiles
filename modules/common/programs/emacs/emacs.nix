@@ -57,7 +57,7 @@ let
           pkgs.emacs-pgtk # from nixpkgs
           # pkgs.emacs-git-pgtk # from emacs-overlay
         else
-          pkgs.emacs30-nox
+          pkgs.emacs-nox
       );
 in
 {
