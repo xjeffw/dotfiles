@@ -78,6 +78,7 @@ in {
         "allow_other"
         "idmap=user"
         "transform_symlinks"
+        "no_contain_symlinks"
         "IdentityFile=/home/jeff/.ssh/id_rsa"
         "reconnect"
         "noatime"
