@@ -187,6 +187,7 @@ binds {
     Super+R { switch-preset-column-width; }
     Super+Shift+R { switch-preset-column-width-back; }
     Super+F { maximize-column; }
+    Super+G { maximize-window-to-edges; }
 
     // launch apps
     Alt+Return repeat=false { spawn "kitty" "-1"; }
