@@ -98,14 +98,6 @@
       <boot order='2'/>
       <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
     </disk>
-    <disk type='block' device='disk'>
-      <driver name='qemu' type='raw' cache='none' io='native' iothread='3'/>
-      <source dev='/dev/disk/by-id/ata-Samsung_SSD_860_EVO_1TB_S3Z8NB0KB91974B'/>
-      <backingStore/>
-      <target dev='vdc' bus='virtio'/>
-      <serial>S3Z8NB0KB91974B</serial>
-      <address type='pci' domain='0x0000' bus='0x0e' slot='0x00' function='0x0'/>
-    </disk>
     <controller type='pci' index='0' model='pcie-root'/>
     <controller type='pci' index='1' model='pcie-root-port'>
       <model name='pcie-root-port'/>
