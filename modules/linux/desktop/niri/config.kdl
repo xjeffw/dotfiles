@@ -134,7 +134,7 @@ window-rule {
 // leaves a full-width column.
 window-rule {
     match app-id="^firefox$"
-    match app-id="^flux$"
+    match app-id="^relay$"
     open-maximized-to-edges true
     default-column-width { proportion 1.0; }
 }
@@ -191,7 +191,7 @@ binds {
 
     // launch apps
     Alt+Return repeat=false { spawn "kitty" "-1"; }
-    Ctrl+Alt+Return repeat=false { spawn "flux-gui"; }
+    Ctrl+Alt+Return repeat=false { spawn "rly-gui"; }
     Ctrl+Alt+F repeat=false { spawn "nautilus"; }
     Ctrl+Alt+E repeat=false { spawn "emacsclient" "-c"; }
     Ctrl+Alt+P repeat=false { spawn-sh "killall pavucontrol; pavucontrol"; }
