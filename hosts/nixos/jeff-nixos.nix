@@ -199,10 +199,13 @@ in
         device = "/dev/disk/by-uuid/644B-90E7";
         fsType = "vfat";
       };
-      "/mnt/data" = {
+      "/mnt/root" = {
+        device = "/dev/disk/by-uuid/b7193db5-0bc4-4550-834f-2129b2f8cea2";
+        fsType = "ext4";
+      };
+      "/home" = {
         device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_1TB_S3Z8NB0KB91974B-part1";
         fsType = "ext4";
-        options = [ "nofail" ];
       };
     };
 
