@@ -19,7 +19,7 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # customize mpv build for plugins and vapoursynth-mvtools
-      # mpv from pkgs-stable
+      # vapoursynth from pkgs-stable
       (final: prev:
         let
           mpvOpts = {
@@ -49,7 +49,7 @@ in {
             ];
           };
           wrapMpv = mpv-unwrapped:
-            final.pkgs-stable.wrapMpv mpv-unwrapped mpvOpts;
+            prev.mpv.override (mpvOpts // { inherit mpv-unwrapped; });
           withVS = mpv-unwrapped:
             mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
           unwrapped = withVS final.mpv-unwrapped;
