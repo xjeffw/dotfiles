@@ -12,8 +12,9 @@ in {
       dev.enable-all = true;
       programs.mpv.enable = true;
       programs.kitty.enable = true;
+      services.protonvpn.enable = true;
       services.protonvpn.configFile =
-        "/private/wg-quick/protonvpn-US-NY-306.conf";
+        "/private/wg-quick/jeff-home-US-DC-46.conf";
     };
 
     environment.systemPackages = with pkgs; [ linux-firmware ];
@@ -47,8 +48,13 @@ in {
     networking.firewall.allowedTCPPorts = [ ];
     networking.firewall.allowedUDPPorts = [ ];
 
-    services.deluge.enable = false;
-    services.deluge.web.enable = false;
+    services.deluge.enable = true;
+    services.deluge.web.enable = true;
+    # deluge 2.2.0 imports the deprecated pkg_resources; silence the startup warning
+    systemd.services.deluged.environment.PYTHONWARNINGS =
+      "ignore::UserWarning:deluge.pluginmanagerbase";
+    systemd.services.delugeweb.environment.PYTHONWARNINGS =
+      "ignore::UserWarning:deluge.pluginmanagerbase";
 
     services.plex.enable = true;
     services.plex.dataDir = "/mnt/huge/jeff-home/var/lib/plex";
@@ -86,10 +92,6 @@ in {
           "writable" = "yes";
         };
       };
-    };
-
-    services.openvpn.servers = {
-      # torguard = { config = "config /root/vpn/torguard.conf"; };
     };
 
     system.stateVersion = "22.11";
