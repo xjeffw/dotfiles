@@ -19,6 +19,22 @@ let
     ];
   mesaPkgs = getMesaPkgs pkgs;
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
+
+  # Which GPU runs the Linux desktop. Set the BIOS primary display to match.
+  #   "nvidia": RTX 4070 SUPER (0d:00.0) drives niri. libvirt/win10.xml still
+  #             passes through this card, so win10 can't run in this mode.
+  #   "amd":    RX 6400 (0c:00.0) drives niri. The NVIDIA card is bound to
+  #             vfio-pci at boot and reserved for win10.
+  hostGpu = "nvidia";
+  nvidiaHost = hostGpu == "nvidia";
+  hostGpuRenderNode = "/dev/dri/by-path/pci-0000:${if nvidiaHost then "0d" else "0c"}:00.0-render";
+  # NVIDIA GPU + its HDMI audio function; only bound to vfio-pci in "amd" mode.
+  nvidiaVfioIds = [
+    "10de:2783"
+    "10de:22bc"
+  ];
+  # Renesas USB controller, always reserved for VFIO.
+  vfioIds = optionals (!nvidiaHost) nvidiaVfioIds ++ [ "1912:0014" ];
 in
 {
   imports = [
@@ -55,6 +71,12 @@ in
             mouse {
                 accel-speed -0.5
             }
+        }
+
+        debug {
+            // Render on the GPU selected by hostGpu in jeff-nixos.nix, rather
+            // than whichever one udev reports as boot_vga.
+            render-drm-device "${hostGpuRenderNode}"
         }
       '';
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
@@ -219,6 +241,14 @@ in
     boot.kernelModules = [
       "kvm-amd"
       "i2c_dev"
+    ]
+    # The nvidia module only adds these when services.xserver is enabled, and
+    # nvidia_drm (which provides /dev/dri for niri) has no PCI alias to autoload.
+    ++ optionals nvidiaHost [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_drm"
+      "nvidia_uvm"
     ];
     boot.initrd.availableKernelModules = [
       "nvme"
@@ -236,10 +266,7 @@ in
       "irqbypass"
       "iommufd"
     ];
-    boot.blacklistedKernelModules = [
-      "nouveau"
-      "nvidia"
-    ];
+    boot.blacklistedKernelModules = [ "nouveau" ] ++ optional (!nvidiaHost) "nvidia";
     boot.kernelParams = [
       "amd_iommu=on"
       "iommu=pt"
@@ -247,7 +274,7 @@ in
       # "hugepagesz=1G"
       # "default_hugepagesz=1G"
       # "hugepages=17"
-      "vfio-pci.ids=10de:2783,10de:22bc,1912:0014"
+      "vfio-pci.ids=${concatStringsSep "," vfioIds}"
       "vfio-pci.disable_vga=1"
       # "vfio-pci.disable_idle_d3=1"
       # "pcie_aspm=off"
@@ -273,8 +300,49 @@ in
 
     hardware.amdgpu = {
       opencl.enable = true;
-      initrd.enable = true;
+      # Load amdgpu early only when it drives the desktop; in "nvidia" mode it
+      # still loads later in boot as a secondary GPU.
+      initrd.enable = !nvidiaHost;
     };
+
+    # Proprietary driver (open kernel modules, recommended for Turing and newer).
+    # videoDrivers is what turns on the hardware.nvidia module, even on Wayland.
+    services.xserver.videoDrivers = mkIf nvidiaHost [ "nvidia" ];
+    hardware.nvidia = mkIf nvidiaHost {
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      open = true;
+      modesetting.enable = true;
+      # Saves VRAM across suspend/resume (NVreg_PreserveVideoMemoryAllocations).
+      powerManagement.enable = true;
+      nvidiaSettings = true;
+    };
+    # The driver's built-in "No VidMem Reuse" profile covers Hyprland, KWin, etc.
+    # but not niri, which otherwise holds ~1 GiB of freed VRAM (niri wiki: Nvidia).
+    environment.etc."nvidia/nvidia-application-profiles-rc.d/50-niri-vidmem-reuse.json" =
+      mkIf nvidiaHost {
+        text = builtins.toJSON {
+          rules = [
+            {
+              pattern = {
+                feature = "procname";
+                matches = "niri";
+              };
+              profile = "No VidMem Reuse (niri)";
+            }
+          ];
+          profiles = [
+            {
+              name = "No VidMem Reuse (niri)";
+              settings = [
+                {
+                  key = "GLVidHeapReuseRatio";
+                  value = 0;
+                }
+              ];
+            }
+          ];
+        };
+      };
 
     nix.settings.max-jobs = 3;
     nix.settings.cores = 16;

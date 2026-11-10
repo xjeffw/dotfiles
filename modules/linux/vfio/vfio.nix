@@ -66,7 +66,9 @@ in {
 
     virtualisation.libvirtd = {
       enable = true;
-      onBoot = "start";
+      # Don't restart guests that were running at shutdown; a VM holding a
+      # passthrough GPU must only be started deliberately.
+      onBoot = "ignore";
       onShutdown = "shutdown";
       qemu = {
         runAsRoot = true;
