@@ -44,12 +44,12 @@
     (sh/sh "ssh" hostname cmd)))
 
 (defn get-display-vcp []
-  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d getvcp %d -t" 3 60)
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d getvcp %d -t" 2 60)
       (run-on-host "jeff-nixos")
       :out str/trim (str/split #" ") last))
 
 (defn set-display-vcp [vcp]
-  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d setvcp %d %s" 3 60 vcp)
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d setvcp %d %s" 2 60 vcp)
       (run-on-host "jeff-nixos")))
 
 (defn lookup-vcp [name-or-vcp]

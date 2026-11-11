@@ -207,14 +207,14 @@ binds {
     XF86AudioMute allow-when-locked=true repeat=false { spawn "hyprshell" "ipc" "call" "volume" "toggleMute"; }
 
     // brightness
-    Super+Equal { spawn "change-brightness" "3" "+" "2"; }
-    Super+Minus { spawn "change-brightness" "3" "-" "2"; }
-    Super+Grave repeat=false { spawn "change-brightness" "3" "96"; }
-    Super+Backslash repeat=false { spawn "change-brightness" "3" "80"; }
-    Super+Ctrl+Equal { spawn "change-brightness" "4" "+" "2"; }
-    Super+Ctrl+Minus { spawn "change-brightness" "4" "-" "2"; }
-    Super+Ctrl+Grave repeat=false { spawn "change-brightness" "4" "96"; }
-    Super+Ctrl+Backslash repeat=false { spawn "change-brightness" "4" "88"; }
+    Super+Equal { spawn "change-brightness" "2" "+" "2"; }
+    Super+Minus { spawn "change-brightness" "2" "-" "2"; }
+    Super+Grave repeat=false { spawn "change-brightness" "2" "96"; }
+    Super+Backslash repeat=false { spawn "change-brightness" "2" "80"; }
+    Super+Ctrl+Equal { spawn "change-brightness" "3" "+" "2"; }
+    Super+Ctrl+Minus { spawn "change-brightness" "3" "-" "2"; }
+    Super+Ctrl+Grave repeat=false { spawn "change-brightness" "3" "96"; }
+    Super+Ctrl+Backslash repeat=false { spawn "change-brightness" "3" "88"; }
 
     XF86MonBrightnessUp allow-when-locked=true { spawn "lightctl" "-d" "+" "5"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "lightctl" "-d" "-" "5"; }

@@ -247,8 +247,8 @@ bindsym $Su+Space      move workspace to output right
 ######################################################################
 ### display control (DDC) bindings
 ######################################################################
-set $dp1                  3
-set $dp2                  4
+set $dp1                  2
+set $dp2                  3
 bindsym $Su+equal         exec change-brightness $dp1 + 2
 bindsym $Su+minus         exec change-brightness $dp1 - 2
 ## grave is `

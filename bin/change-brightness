@@ -34,9 +34,9 @@ popup_file=
 
 function parse_bus() {
   bus="$1"
-  if [ "$bus" == "3" ]; then
+  if [ "$bus" == "2" ]; then
     model="PA32U"
-  elif [ "$bus" == "4" ]; then
+  elif [ "$bus" == "3" ]; then
     model="DELL P2715Q"
   else
     echoerr "Unknown display (bus=${bus})"
@@ -92,7 +92,9 @@ function current_brightness() {
   if [ -f "$value_file" ]; then
     cat "$value_file"
   else
-    exit 1
+    # return, not exit: this runs in $(current_brightness || get-brightness ...),
+    # where exit would end the subshell before the fallback runs.
+    return 1
   fi
 }
 
