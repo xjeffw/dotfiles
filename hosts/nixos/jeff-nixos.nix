@@ -25,7 +25,7 @@ let
   #             passes through this card, so win10 can't run in this mode.
   #   "amd":    RX 6400 (0c:00.0) drives niri. The NVIDIA card is bound to
   #             vfio-pci at boot and reserved for win10.
-  hostGpu = "nvidia";
+  hostGpu = "amd";
   nvidiaHost = hostGpu == "nvidia";
   hostGpuRenderNode = "/dev/dri/by-path/pci-0000:${if nvidiaHost then "0d" else "0c"}:00.0-render";
   # NVIDIA GPU + its HDMI audio function; only bound to vfio-pci in "amd" mode.
